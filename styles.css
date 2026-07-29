@@ -2309,3 +2309,93 @@ body,button,input,select,textarea,.title,.screen-title,.home-title h1{
   #routine .routine-character-stage,#brain .routine-character-stage,#habits .habit-character-stage{width:145px!important;min-width:145px!important;}
   #routine .routine-task-character,#brain .routine-task-character,#habits .habit-task-character{max-width:122px!important;max-height:190px!important;}
 }
+
+
+
+/* =========================================================
+   PROJECT LUNA V2.1 — 여행·관찰일기
+   ========================================================= */
+.travel-content{padding-bottom:18px!important}
+.travel-layout{
+  display:grid;
+  grid-template-columns:minmax(360px,.9fr) minmax(420px,1.1fr);
+  gap:16px;
+  min-height:0;
+  padding:0 10px 12px;
+}
+.travel-editor-card,.travel-list-card{min-height:0;margin:0!important}
+.travel-editor-head,.travel-list-head{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px
+}
+.travel-editor-head h2,.travel-list-head h2{margin:0;color:#60477c}
+.travel-editor-head p,.travel-list-head p{margin:4px 0 0;color:#7d6b87}
+.travel-camera-badge,.travel-list-head>span{
+  display:grid;place-items:center;width:54px;height:54px;border-radius:18px;
+  font-size:28px;background:linear-gradient(145deg,#fff4cb,#f2ddff);
+  border:1px solid rgba(222,186,87,.75);box-shadow:0 7px 14px rgba(83,54,100,.12)
+}
+.travel-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.travel-form-grid label,.travel-story-label{
+  display:flex;flex-direction:column;gap:6px;font-weight:850;color:#5d4d68
+}
+.travel-form-grid input,.travel-story-label textarea{
+  width:100%;box-sizing:border-box;border:1px solid #d8cbe0;border-radius:13px;
+  padding:11px 12px;background:rgba(255,255,255,.88);font:inherit;color:#493c52
+}
+.travel-story-label{margin-top:12px}
+.travel-story-label textarea{min-height:132px;resize:vertical;line-height:1.55}
+.travel-photo-label input{position:absolute;opacity:0;pointer-events:none}
+.travel-photo-label span{
+  display:flex;align-items:center;justify-content:center;min-height:43px;border-radius:13px;
+  background:linear-gradient(135deg,#7551a7,#b868a1);color:#fff;cursor:pointer;
+  box-shadow:0 4px 0 #583e78
+}
+.travel-photo-preview{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-top:12px;min-height:78px
+}
+.travel-photo-empty{
+  grid-column:1/-1;display:grid;place-items:center;min-height:78px;border:2px dashed #d7c8df;
+  border-radius:14px;color:#98889f;background:rgba(255,255,255,.45)
+}
+.travel-preview-item{position:relative;aspect-ratio:1;border-radius:14px;overflow:hidden;background:#eee}
+.travel-preview-item img{width:100%;height:100%;object-fit:cover}
+.travel-preview-item button{
+  position:absolute;right:5px;top:5px;width:26px;height:26px;border:0;border-radius:50%;
+  color:#fff;background:rgba(69,44,75,.82);font-size:20px;line-height:1;cursor:pointer
+}
+.travel-actions{display:grid;grid-template-columns:.7fr 1.3fr;gap:10px;margin-top:14px}
+.travel-storage-note{margin:12px 0 0!important}
+.travel-list-card{display:flex;flex-direction:column}
+.travel-diary-list{flex:1;min-height:0;overflow:auto;padding-right:3px}
+.travel-entry-card{
+  border-radius:18px;padding:13px;margin-bottom:12px;background:rgba(255,255,255,.82);
+  border:1px solid rgba(211,190,220,.8);box-shadow:0 7px 16px rgba(75,45,89,.10)
+}
+.travel-entry-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.travel-entry-top small{color:#8a7793;font-weight:750}
+.travel-entry-top h3{margin:4px 0 8px;color:#59416f;font-size:20px}
+.travel-entry-buttons{display:flex;gap:5px}
+.travel-entry-buttons button{
+  border:0;border-radius:9px;padding:6px 9px;background:#eee5f2;color:#6b5576;font-weight:800;cursor:pointer
+}
+.travel-entry-photos{display:grid;gap:6px;margin:4px 0 9px;border-radius:14px;overflow:hidden}
+.travel-entry-photos.count-1{grid-template-columns:1fr}
+.travel-entry-photos.count-2,.travel-entry-photos.count-3,.travel-entry-photos.count-4{grid-template-columns:1fr 1fr}
+.travel-entry-photos button{border:0;padding:0;background:transparent;cursor:pointer;min-height:120px}
+.travel-entry-photos img{width:100%;height:100%;max-height:260px;object-fit:cover;display:block;border-radius:10px}
+.travel-entry-card>p{margin:8px 2px 1px;line-height:1.65;color:#584d5d}
+.travel-empty{display:grid;place-items:center;text-align:center;min-height:300px;color:#806f88}
+.travel-empty span{font-size:58px}
+.travel-empty b{font-size:19px}
+.travel-empty p{max-width:330px;line-height:1.55}
+.travel-photo-modal{text-align:center}
+.travel-photo-modal img{display:block;max-width:100%;max-height:70vh;margin:0 auto 14px;border-radius:16px;object-fit:contain}
+.travel-stat-card p{max-height:3.2em;overflow:hidden}
+@media(max-width:950px){
+  .travel-layout{grid-template-columns:1fr}
+  .travel-list-card{min-height:430px}
+}
+@media(max-width:600px){
+  .travel-form-grid{grid-template-columns:1fr}
+  .travel-photo-preview{grid-template-columns:repeat(2,1fr)}
+}

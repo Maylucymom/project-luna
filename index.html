@@ -65,7 +65,7 @@
 
 
 
-<link rel="stylesheet" href="styles.css?v=2.0.1">
+<link rel="stylesheet" href="styles.css?v=2.1.0">
 </head><body><div class="app"><main class="stage"><div class="bg"></div><div class="veil"></div>
 <div class="topbar"><div class="brand darkglass">🌙 PROJECT LUNA</div></div>
 <section id="home" class="scene active"><div class="home-left"><div class="card darkglass"><div class="datetime-main" id="homeDate"></div><div class="datetime-sub" id="homeTime"></div><small id="weatherText">오늘도 반짝이는 하루</small></div><div class="card glass levelbox">
@@ -280,6 +280,60 @@
   </div>
 </section>
 <section id="shop" class="scene"><div class="content"><h1 class="title screen-title">포인트 상점</h1><div class="panel glass card"><div id="shopGrid" class="shopgrid"></div></div></div></section>
+
+<section id="travel" class="scene">
+  <div class="content travel-content">
+    <h1 class="title screen-title">📷 여행·관찰일기</h1>
+    <div class="travel-layout">
+      <div class="panel glass card travel-editor-card">
+        <div class="travel-editor-head">
+          <div>
+            <h2>오늘의 순간을 남겨요</h2>
+            <p>사진과 짧은 글만으로도 멋진 여행일기가 완성돼요.</p>
+          </div>
+          <span class="travel-camera-badge">📸</span>
+        </div>
+
+        <div class="travel-form-grid">
+          <label>날짜
+            <input id="travelDate" type="date">
+          </label>
+          <label>제목
+            <input id="travelTitle" maxlength="40" placeholder="예: 제주 바다에서">
+          </label>
+          <label>장소
+            <input id="travelPlace" maxlength="40" placeholder="예: 협재해수욕장">
+          </label>
+          <label class="travel-photo-label">사진
+            <input id="travelPhotoInput" type="file" accept="image/*" multiple onchange="handleTravelPhotos(event)">
+            <span>사진 고르기 · 최대 4장</span>
+          </label>
+        </div>
+
+        <label class="travel-story-label">오늘 기억하고 싶은 이야기
+          <textarea id="travelStory" maxlength="1000" placeholder="사진을 보며 기억나는 일을 자유롭게 적어 보세요. 한 줄만 적어도 좋아요."></textarea>
+        </label>
+
+        <div id="travelPhotoPreview" class="travel-photo-preview"></div>
+
+        <div class="travel-actions">
+          <button class="btn soft" type="button" onclick="clearTravelDraft()">새로 쓰기</button>
+          <button class="btn gold" type="button" onclick="saveTravelDiary()">📷 여행일기 저장</button>
+        </div>
+        <p class="smallnote travel-storage-note">사진은 기기 안에 저장됩니다. 용량을 줄여 보관하며, 중요한 기록은 설정의 백업 파일로 자주 저장해 주세요.</p>
+      </div>
+
+      <div class="panel glass card travel-list-card">
+        <div class="travel-list-head">
+          <div><h2>나의 여행 앨범</h2><p id="travelCountText">0개의 순간</p></div>
+          <span>🌿</span>
+        </div>
+        <div id="travelDiaryList" class="travel-diary-list"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section id="stats" class="scene">
   <div class="content">
     <h1 class="title screen-title">성장 통계</h1>
@@ -299,6 +353,11 @@
       <div class="diary-stat-section">
         <h2>🌙 최근 달빛일기</h2>
         <div id="diaryStatsList" class="diary-stats-list"></div>
+      </div>
+
+      <div class="diary-stat-section">
+        <h2>📷 최근 여행·관찰일기</h2>
+        <div id="travelStatsList" class="diary-stats-list"></div>
       </div>
       <div class="print-actions"><button class="btn gold" onclick="printGrowthReport()">🖨️ 성장 리포트 PDF·인쇄</button></div>
       <p class="smallnote" style="text-align:center">버튼을 누른 뒤 인쇄 창에서 ‘PDF로 저장’을 선택할 수 있어요.</p>
@@ -328,7 +387,7 @@
 <nav class="nav" id="nav"></nav><div class="toast" id="toast"></div><div class="modal" id="modal"><div class="modalbox" id="modalBox"></div></div></main></div>
 <script>
 const KEY='projectLunaFinalStable';
-const defaults={points:0,level:1,gems:0,money:0,moneyLedger:[],bonusDate:'',books:[],ledger:[],mission:{date:'',choice:null,done:false,pending:false},moods:{morning:{},evening:{}},routineDone:{date:'',items:[],skipped:[]},brainDone:{date:'',items:[],skipped:[]},brainExp:{},moonDiary:{},parentMemos:[],shopRequests:[],habitDone:{date:'',morning:{items:[],skipped:[]},after:{items:[],skipped:[]},evening:{items:[],skipped:[]}},settings:{pin:'1234',appTitle:'다이애나의 비밀도서관',appSubtitle:'마법과 지혜가 자라는 곳',sound:true,bgm:true,surprisePoint:20,routinePoint:10,bookPoint:10,activityPoint:50,gemGoal:10,gemExchange:120,koGoal:1000,enGoal:1000,worldStep:100,learning:[
+const defaults={points:0,level:1,gems:0,money:0,moneyLedger:[],bonusDate:'',travelDiaries:[],books:[],ledger:[],mission:{date:'',choice:null,done:false,pending:false},moods:{morning:{},evening:{}},routineDone:{date:'',items:[],skipped:[]},brainDone:{date:'',items:[],skipped:[]},brainExp:{},moonDiary:{},parentMemos:[],shopRequests:[],habitDone:{date:'',morning:{items:[],skipped:[]},after:{items:[],skipped:[]},evening:{items:[],skipped:[]}},settings:{pin:'1234',appTitle:'다이애나의 비밀도서관',appSubtitle:'마법과 지혜가 자라는 곳',sound:true,bgm:true,surprisePoint:20,routinePoint:10,bookPoint:10,activityPoint:50,gemGoal:10,gemExchange:120,koGoal:1000,enGoal:1000,worldStep:100,learning:[
 '수학 연산|➕|10분|수학|ON',
 '사고력 수학|🧩|10분|수학|ON',
 '국어 읽기|📖|15분|국어|ON',
@@ -384,6 +443,7 @@ if(!Array.isArray(state.brainDone.skipped))state.brainDone.skipped=[];
 if(!state.brainExp||typeof state.brainExp!=='object')state.brainExp={};
 if(!state.moonDiary||typeof state.moonDiary!=='object')state.moonDiary={};
 if(!Array.isArray(state.parentMemos))state.parentMemos=[];
+if(!Array.isArray(state.travelDiaries))state.travelDiaries=[];
 if(!state.settings.parentMemoPrompt)state.settings.parentMemoPrompt=defaults.settings.parentMemoPrompt;
 
 if(!Array.isArray(state.shopRequests))state.shopRequests=[];
@@ -402,11 +462,28 @@ if(!state.settings.morningCheckQuestion)state.settings.morningCheckQuestion=defa
   if(!Array.isArray(state.settings.eveningHabits))state.settings.eveningHabits=defaults.settings.eveningHabits.slice();
 })();
 function deepMerge(a,b){if(Array.isArray(a))return b||a;const o={...a};for(const k in b||{})o[k]=(a[k]&&typeof a[k]==='object'&&!Array.isArray(a[k]))?deepMerge(a[k],b[k]):b[k];return o}
-function today(){return new Date().toISOString().slice(0,10)}function save(){storageSet(JSON.stringify(state));renderAll()}function toast(t){const e=document.getElementById('toast');e.textContent=t;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),1400)}function openModal(h){document.getElementById('modalBox').innerHTML=h;document.getElementById('modal').classList.add('show')}function closeModal(){document.getElementById('modal').classList.remove('show')}document.getElementById('modal').onclick=e=>{if(e.target.id==='modal')closeModal()};
-function ensureDay(){const d=today();if(state.routineDone.date!==d)state.routineDone={date:d,items:[],skipped:[]};if(state.brainDone.date!==d)state.brainDone={date:d,items:[],skipped:[]};if(state.habitDone.date!==d)state.habitDone={date:d,morning:{items:[],skipped:[]},after:{items:[],skipped:[]},evening:{items:[],skipped:[]}};if(state.mission.date!==d)state.mission={date:d,choice:null,done:false,pending:false}}
+function today(){
+  const d=new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function save(){storageSet(JSON.stringify(state));renderAll()}function toast(t){const e=document.getElementById('toast');e.textContent=t;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),1400)}function openModal(h){document.getElementById('modalBox').innerHTML=h;document.getElementById('modal').classList.add('show')}function closeModal(){document.getElementById('modal').classList.remove('show')}document.getElementById('modal').onclick=e=>{if(e.target.id==='modal')closeModal()};
+
+function ensureDay(){
+  const d=today();
+  let changed=false;
+  if(state.routineDone.date!==d){state.routineDone={date:d,items:[],skipped:[]};changed=true;}
+  if(state.brainDone.date!==d){state.brainDone={date:d,items:[],skipped:[]};changed=true;}
+  if(state.habitDone.date!==d){
+    state.habitDone={date:d,morning:{items:[],skipped:[]},after:{items:[],skipped:[]},evening:{items:[],skipped:[]}};
+    changed=true;
+  }
+  if(state.mission.date!==d){state.mission={date:d,choice:null,done:false,pending:false};changed=true;}
+  if(changed)storageSet(JSON.stringify(state));
+  return changed;
+}
 function parseRows(arr){return (arr||[]).map(x=>{const [name,icon='✨',time='']=(x||'').split('|');return{name,icon,time}}).filter(x=>x.name)}
 function parseLearning(arr){return (arr||[]).map((x,sourceIndex)=>{const [name,icon='🧠',time='10분',domain='두뇌',active='ON']=(x||'').split('|');return{name,icon,time,domain,active:String(active).toUpperCase()!=='OFF',sourceIndex}}).filter(x=>x.name)}function addPoints(n,memo){state.points+=n;state.ledger.unshift({date:today(),amount:n,memo});save()}
-const navItems=[['home','🏠','홈'],['routine','📚','학습루틴'],['brain','🧠','두뇌루틴'],['habits','🏠','생활루틴'],['reading','📚','독서'],['mission','🎴','특별미션'],['map','🗺️','세계관'],['album','📖','독서앨범'],['bank','🏦','달빛은행'],['shop','🏪','포인트상점'],['stats','📈','통계'],['settings','⚙️','설정']];function buildNav(){nav.innerHTML=navItems.map(([id,i,l])=>`<button data-id="${id}" onclick="showScene('${id}')"><span>${i}</span>${l}</button>`).join('')}function showScene(id){document.querySelectorAll('.scene').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.id===id));if(id==='settings'){pinGate.style.display='block';settingsBody.style.display='none';pinInput.value=''}}
+const navItems=[['home','🏠','홈'],['routine','📚','학습루틴'],['brain','🧠','두뇌루틴'],['habits','🏠','생활루틴'],['reading','📚','독서'],['mission','🎴','특별미션'],['map','🗺️','세계관'],['album','📖','독서앨범'],['travel','📷','여행일기'],['bank','🏦','달빛은행'],['shop','🏪','포인트상점'],['stats','📈','통계'],['settings','⚙️','설정']];function buildNav(){nav.innerHTML=navItems.map(([id,i,l])=>`<button data-id="${id}" onclick="showScene('${id}')"><span>${i}</span>${l}</button>`).join('')}function showScene(id){document.querySelectorAll('.scene').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.id===id));if(id==='settings'){pinGate.style.display='block';settingsBody.style.display='none';pinInput.value=''}}
 function renderHome(){const all=[...parseRows(state.settings.morningHabits),...parseRows(state.settings.afterHabits),...parseRows(state.settings.eveningHabits)].length,done=state.habitDone.morning.items.length+state.habitDone.after.items.length+state.habitDone.evening.items.length,rp=Math.round(done/all*100)||0,read=Math.min(100,Math.round(state.books.length/(state.settings.koGoal+state.settings.enGoal)*100)),mp=state.mission.done?100:0,level=Math.floor(state.points/500)+1,levelPct=state.points%500/5;state.level=level;homePoints.textContent=state.points.toLocaleString();homeGems.textContent=state.gems;homeLevel.textContent='Lv. '+level;levelBar.style.width=levelPct+'%';nextLevelText.textContent=`다음 레벨까지 ${500-(state.points%500)}P`;homeRoutinePct.textContent=rp+'%';homeRoutineBar.style.width=rp+'%';const totalBooks=state.books.length,stageIn=Math.min(100,totalBooks%100|| (totalBooks>0?100:0)),stagePct=totalBooks>=1000?100:(totalBooks%100),readingPoints=state.books.reduce((sum,b)=>sum+(Number(b.points)||0),0);homeReadPct.textContent=(totalBooks>=1000?100:stagePct)+'%';homeReadBar.style.width=(totalBooks>=1000?100:stagePct)+'%';homeReadingStage.textContent=`${totalBooks>=1000?100:totalBooks%100}/100권 · ${readingPoints.toLocaleString()}P`;homeMissionPct.textContent=mp+'%';homeMissionBar.style.width=mp+'%';homeLevelPct.textContent=Math.round(levelPct)+'%';homeLevelBar.style.width=levelPct+'%';appTitle.textContent=state.settings.appTitle;appSubtitle.textContent=state.settings.appSubtitle;const rubyList=state.settings.rubyMessages&&state.settings.rubyMessages.length?state.settings.rubyMessages:['오늘도 네가 빛나는 하루가 되길 응원해! ✨'];rubyMessage.textContent=rubyList[(new Date().getDate()-1)%rubyList.length];dailyBonus.style.display=state.bonusDate===today()?'none':'block';dailyBonus.textContent=`🎁 오늘의 서프라이즈 +${state.settings.surprisePoint}P`;
     const todayReflection=state.moods.evening[today()];
     if(todayReflection){
@@ -765,10 +842,165 @@ function renderStats(){
   statMoney.textContent=(state.money||0).toLocaleString()+'원';
   const entries=Object.entries(state.moonDiary||{}).sort((a,b)=>b[0].localeCompare(a[0])).slice(0,7);
   diaryStatsList.innerHTML=entries.length?entries.map(([date,d])=>`<div class="diary-stat-card"><b>${date}</b><div>${d.sentence||'선택형 달빛일기'}</div>${d.freeText?`<p>✏️ ${esc(d.freeText)}</p>`:''}</div>`).join(''):'<div class="empty-diary-stat">아직 저장된 달빛일기가 없어요.</div>';
+  const travelStatsEl=document.getElementById('travelStatsList');
+  if(travelStatsEl){
+    const travel=(state.travelDiaries||[]).slice().sort((a,b)=>(b.date||'').localeCompare(a.date||'')).slice(0,8);
+    travelStatsEl.innerHTML=travel.length?travel.map(x=>`<div class="diary-stat-card travel-stat-card"><b>${esc(x.date||'')} · ${esc(x.title||'오늘의 여행')}</b><div>${x.place?'📍 '+esc(x.place):'사진과 이야기 기록'}</div>${x.story?`<p>${esc(x.story)}</p>`:''}</div>`).join(''):'<div class="empty-diary-stat">아직 저장된 여행·관찰일기가 없어요.</div>';
+  }
   const memos=(state.parentMemos||[]).slice(0,7);
   const parentMemoStatsEl=document.getElementById('parentMemoStatsList');
   if(parentMemoStatsEl)parentMemoStatsEl.innerHTML=memos.length?memos.map(m=>`<div class="diary-stat-card parent-stat-card"><b>${m.date} · ${esc(m.mood)}</b><div>가장 오래 본 화면: ${esc(m.favorite)}</div><p>${esc(m.text)}</p></div>`).join(''):'<div class="empty-diary-stat">아직 저장된 엄마 메모가 없어요.</div>';
 }
+
+let travelDraftPhotos=[];
+let editingTravelId=null;
+
+function escAttr(s){
+  return String(s??'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function formatTravelDate(date){
+  if(!date)return '';
+  const [y,m,d]=date.split('-');
+  return `${y}.${m}.${d}`;
+}
+function clearTravelDraft(){
+  editingTravelId=null;
+  travelDraftPhotos=[];
+  const dateEl=document.getElementById('travelDate');
+  const titleEl=document.getElementById('travelTitle');
+  const placeEl=document.getElementById('travelPlace');
+  const storyEl=document.getElementById('travelStory');
+  const inputEl=document.getElementById('travelPhotoInput');
+  if(dateEl)dateEl.value=today();
+  if(titleEl)titleEl.value='';
+  if(placeEl)placeEl.value='';
+  if(storyEl)storyEl.value='';
+  if(inputEl)inputEl.value='';
+  renderTravelPhotoPreview();
+}
+function renderTravelPhotoPreview(){
+  const box=document.getElementById('travelPhotoPreview');
+  if(!box)return;
+  box.innerHTML=travelDraftPhotos.length
+    ? travelDraftPhotos.map((src,i)=>`<div class="travel-preview-item"><img src="${src}" alt="선택한 사진 ${i+1}"><button type="button" onclick="removeTravelDraftPhoto(${i})">×</button></div>`).join('')
+    : '<div class="travel-photo-empty">사진을 고르면 여기에 미리 보여요.</div>';
+}
+function removeTravelDraftPhoto(index){
+  travelDraftPhotos.splice(index,1);
+  renderTravelPhotoPreview();
+}
+function compressTravelImage(file){
+  return new Promise((resolve,reject)=>{
+    if(!file||!file.type.startsWith('image/'))return reject(new Error('image only'));
+    const reader=new FileReader();
+    reader.onload=()=>{
+      const img=new Image();
+      img.onload=()=>{
+        const max=1280;
+        const scale=Math.min(1,max/Math.max(img.width,img.height));
+        const w=Math.max(1,Math.round(img.width*scale));
+        const h=Math.max(1,Math.round(img.height*scale));
+        const canvas=document.createElement('canvas');
+        canvas.width=w;canvas.height=h;
+        const ctx=canvas.getContext('2d',{alpha:false});
+        ctx.fillStyle='#fff';ctx.fillRect(0,0,w,h);
+        ctx.drawImage(img,0,0,w,h);
+        resolve(canvas.toDataURL('image/jpeg',0.72));
+      };
+      img.onerror=reject;
+      img.src=reader.result;
+    };
+    reader.onerror=reject;
+    reader.readAsDataURL(file);
+  });
+}
+async function handleTravelPhotos(event){
+  const files=[...(event.target.files||[])].slice(0,Math.max(0,4-travelDraftPhotos.length));
+  if(!files.length)return;
+  toast('📷 사진을 준비하고 있어요.');
+  for(const file of files){
+    try{
+      const data=await compressTravelImage(file);
+      if(travelDraftPhotos.length<4)travelDraftPhotos.push(data);
+    }catch(err){
+      console.error(err);
+    }
+  }
+  event.target.value='';
+  renderTravelPhotoPreview();
+  toast(`📷 사진 ${travelDraftPhotos.length}장을 준비했어요.`);
+}
+function saveTravelDiary(){
+  const date=(document.getElementById('travelDate')?.value||today());
+  const title=(document.getElementById('travelTitle')?.value||'').trim();
+  const place=(document.getElementById('travelPlace')?.value||'').trim();
+  const story=(document.getElementById('travelStory')?.value||'').trim();
+  if(!title&&!place&&!story&&!travelDraftPhotos.length)return toast('사진이나 이야기를 하나 이상 남겨 주세요.');
+  const entry={
+    id:editingTravelId||('travel_'+Date.now()),
+    date,
+    title:title||place||'오늘의 여행',
+    place,
+    story,
+    photos:[...travelDraftPhotos],
+    savedAt:new Date().toISOString()
+  };
+  const idx=state.travelDiaries.findIndex(x=>x.id===entry.id);
+  if(idx>=0)state.travelDiaries[idx]=entry;
+  else state.travelDiaries.unshift(entry);
+  try{
+    storageSet(JSON.stringify(state));
+  }catch(err){
+    toast('사진 용량이 커서 저장하지 못했어요. 사진 수를 줄여 주세요.');
+    return;
+  }
+  clearTravelDraft();
+  renderAll();
+  playSound('magic');sparkleBurst();
+  toast('📷 여행일기를 저장했어요!');
+}
+function editTravelDiary(id){
+  const entry=state.travelDiaries.find(x=>x.id===id);
+  if(!entry)return;
+  editingTravelId=id;
+  travelDraftPhotos=[...(entry.photos||[])];
+  showScene('travel');
+  travelDate.value=entry.date||today();
+  travelTitle.value=entry.title||'';
+  travelPlace.value=entry.place||'';
+  travelStory.value=entry.story||'';
+  renderTravelPhotoPreview();
+  document.querySelector('.travel-editor-card')?.scrollIntoView({behavior:'smooth',block:'start'});
+}
+function deleteTravelDiary(id){
+  if(!confirm('이 여행일기를 삭제할까요?'))return;
+  state.travelDiaries=state.travelDiaries.filter(x=>x.id!==id);
+  save();
+  toast('여행일기를 삭제했어요.');
+}
+function openTravelPhoto(src){
+  openModal(`<div class="travel-photo-modal"><img src="${src}" alt="여행 사진"><button class="btn soft" onclick="closeModal()">닫기</button></div>`);
+}
+function renderTravelDiary(){
+  const dateEl=document.getElementById('travelDate');
+  if(dateEl&&!dateEl.value)dateEl.value=today();
+  renderTravelPhotoPreview();
+  const list=[...(state.travelDiaries||[])].sort((a,b)=>(b.date||'').localeCompare(a.date||'')||(b.savedAt||'').localeCompare(a.savedAt||''));
+  const count=document.getElementById('travelCountText');
+  if(count)count.textContent=`${list.length}개의 순간`;
+  const box=document.getElementById('travelDiaryList');
+  if(!box)return;
+  box.innerHTML=list.length?list.map(entry=>{
+    const photos=(entry.photos||[]).slice(0,4);
+    return `<article class="travel-entry-card">
+      <div class="travel-entry-top"><div><small>${formatTravelDate(entry.date)}${entry.place?' · '+esc(entry.place):''}</small><h3>${esc(entry.title||'오늘의 여행')}</h3></div>
+      <div class="travel-entry-buttons"><button onclick="editTravelDiary('${entry.id}')">수정</button><button onclick="deleteTravelDiary('${entry.id}')">삭제</button></div></div>
+      ${photos.length?`<div class="travel-entry-photos count-${photos.length}">${photos.map((src,i)=>`<button type="button" onclick="openTravelPhoto(${JSON.stringify(src).replace(/"/g,'&quot;')})"><img src="${src}" alt="여행 사진 ${i+1}"></button>`).join('')}</div>`:''}
+      ${entry.story?`<p>${esc(entry.story).replace(/\n/g,'<br>')}</p>`:''}
+    </article>`;
+  }).join(''):'<div class="travel-empty"><span>📷</span><b>아직 여행일기가 없어요.</b><p>여행지, 자연 관찰, 가족과의 특별한 순간을 사진과 함께 남겨 보세요.</p></div>';
+}
+
 function printGrowthReport(){const routineCount=state.routineDone.items.length;const bookRows=state.books.slice(0,20).map(b=>`<tr><td>${b.date}</td><td>${esc(b.title)}</td><td>${b.lang}</td><td>${b.points}P</td></tr>`).join('')||'<tr><td colspan="4">아직 독서 기록이 없어요.</td></tr>';const pointRows=state.ledger.slice(0,20).map(x=>`<tr><td>${x.date}</td><td>${esc(x.memo)}</td><td>${x.amount>=0?'+':''}${x.amount}P</td></tr>`).join('')||'<tr><td colspan="3">기록 없음</td></tr>';const moneyRows=(state.moneyLedger||[]).slice(0,20).map(x=>`<tr><td>${x.date}</td><td>${esc(x.memo)}</td><td>${x.amount>=0?'+':''}${x.amount.toLocaleString()}원</td></tr>`).join('')||'<tr><td colspan="3">기록 없음</td></tr>';printReport.innerHTML=`<div class="print-page"><div class="print-title"><h1>🌙 다이애나의 성장 이야기</h1><p>${new Date().toLocaleDateString()} 성장 리포트</p></div><div class="print-grid"><div class="print-box"><h3>📋 학습루틴</h3><b>${routineCount}회 완료</b></div><div class="print-box"><h3>🌱 생활습관</h3><b>${(state.habitDone.morning.items.length+state.habitDone.after.items.length+state.habitDone.evening.items.length)}회 완료</b></div><div class="print-box"><h3>📚 독서</h3><b>${state.books.length}권 / 1,000권</b></div><div class="print-box"><h3>🎴 특별미션</h3><b>${state.mission.done?1:0}회 완료</b></div><div class="print-box"><h3>🪙 성장 포인트</h3><b>${state.points.toLocaleString()}P</b></div><div class="print-box"><h3>💰 용돈 통장</h3><b>${(state.money||0).toLocaleString()}원</b></div><div class="print-box print-full"><h3>📖 최근 독서 기록</h3><table class="print-table"><tr><th>날짜</th><th>책 제목</th><th>구분</th><th>포인트</th></tr>${bookRows}</table></div><div class="print-box print-full"><h3>🪙 최근 포인트 내역</h3><table class="print-table"><tr><th>날짜</th><th>내용</th><th>금액</th></tr>${pointRows}</table></div><div class="print-box print-full"><h3>💰 최근 용돈 내역</h3><table class="print-table"><tr><th>날짜</th><th>내용</th><th>금액</th></tr>${moneyRows}</table></div><div class="print-box print-full"><h3>🌙 최근 달빛일기</h3>${Object.entries(state.moonDiary||{}).sort((a,b)=>b[0].localeCompare(a[0])).slice(0,7).map(([date,d])=>`<p><b>${date}</b><br>${d.sentence||''}${d.freeText?`<br>✏️ ${esc(d.freeText)}`:''}</p>`).join('')||'<p>기록 없음</p>'}</div><div class="print-box print-full"><h3>📝 엄마의 실사용 메모</h3>${getParentMemoPrintHtml()}</div><div class="print-box print-full"><h3>💌 부모가 남기는 말</h3><p>결과보다 다시 시작하고 끝까지 해낸 네 모습이 가장 자랑스러워.</p></div></div></div>`;window.print()}
 
 
@@ -1317,11 +1549,11 @@ function saveBackupSettings(){
   refreshBackupCenter();
 }
 function exportData(){
-  const payload={app:'PROJECT LUNA',version:'2.0.1-daily-use-release',exportedAt:new Date().toISOString(),data:state};
+  const payload={app:'PROJECT LUNA',version:'2.1.0-daily-reset-travel',exportedAt:new Date().toISOString(),data:state};
   const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
   const a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
-  a.download='PROJECT_LUNA_V1_1_backup_'+today()+'.json';
+  a.download='PROJECT_LUNA_V2_1_backup_'+today()+'.json';
   a.click();
   setTimeout(()=>URL.revokeObjectURL(a.href),500);
   toast('💾 백업 파일을 만들었어요.');
@@ -1350,20 +1582,44 @@ function importData(e){
 
 function resetAll(){if(confirm('정말 모든 데이터를 초기화할까요?')){storageRemove();location.reload()}}
 function safeRender(name,fn){try{fn()}catch(e){console.error(name,e)}}
-function renderAll(){ensureDay();safeRender('book categories',renderBookCategories);safeRender('additional activities',renderAdditionalActivities);safeRender('home',renderHome);safeRender('routine',renderRoutine);safeRender('brain',renderBrain);safeRender('habits',renderHabits);safeRender('books',renderBooks);safeRender('mission',renderMission);safeRender('map',renderMap);safeRender('bank',renderBank);safeRender('shop',renderShop);safeRender('stats',renderStats);if(settingsBody&&settingsBody.style.display==='grid')safeRender('settings',renderSettings)}function updateClock(){const d=new Date(),days=['일','월','화','수','목','금','토'];homeDate.textContent=`${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')} (${days[d.getDay()]})`;homeTime.textContent=d.toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit',second:'2-digit'})}
+function renderAll(){ensureDay();safeRender('book categories',renderBookCategories);safeRender('additional activities',renderAdditionalActivities);safeRender('home',renderHome);safeRender('routine',renderRoutine);safeRender('brain',renderBrain);safeRender('habits',renderHabits);safeRender('books',renderBooks);safeRender('mission',renderMission);safeRender('map',renderMap);safeRender('bank',renderBank);safeRender('shop',renderShop);safeRender('travel diary',renderTravelDiary);safeRender('stats',renderStats);if(settingsBody&&settingsBody.style.display==='grid')safeRender('settings',renderSettings)}function updateClock(){const d=new Date(),days=['일','월','화','수','목','금','토'];homeDate.textContent=`${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')} (${days[d.getDay()]})`;homeTime.textContent=d.toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit',second:'2-digit'})}
 
 Object.assign(window,{
   openMorningCheck,saveMorningCheck,openMoonDiary,selectMoonDiaryAnswer,moonDiaryNext,chooseMoonDiaryOption,moonDiaryBack,restartMoonDiary,saveMoonDiary,saveSimpleMoonDiary,openMorningMood,openDayReflection,saveMorningMood,saveDayReflection,
   chooseMission,completeMissionRequest,approveMission,approveMissionFromSettings,completeHabit,skipHabit,skipRoutine,startLearningTimer,completeBrain,skipBrain,openBrainResult,bindWorldMapClicks,openWorldRegion,enterWorldRegion,closeWorldRegion,approveShopRequest,rejectShopRequest,clearReviewedShopRequests,rejectMissionFromSettings,
-  playSound,sparkleBurst,saveParentMemo,deleteParentMemo,editParentMemo,saveParentMemoSettings,createManualSnapshot,restoreSnapshot,restoreLatestSnapshot,clearBackupSnapshots,saveBackupSettings
+  playSound,sparkleBurst,handleTravelPhotos,removeTravelDraftPhoto,clearTravelDraft,saveTravelDiary,editTravelDiary,deleteTravelDiary,openTravelPhoto,saveParentMemo,deleteParentMemo,editParentMemo,saveParentMemoSettings,createManualSnapshot,restoreSnapshot,restoreLatestSnapshot,clearBackupSnapshots,saveBackupSettings
 });
 
-function init(){maybeAutoBackup();buildNav();const first=document.querySelector('.nav button');if(first)first.classList.add('active');updateClock();setInterval(updateClock,1000);renderAll()}init();
+let observedDay=today();
+function checkForNewDay(force=false){
+  const current=today();
+  if(force||current!==observedDay){
+    observedDay=current;
+    const changed=ensureDay();
+    renderAll();
+    if(changed)toast('🌅 새로운 하루가 시작됐어요! 오늘의 루틴과 응원 선물이 준비됐어요.');
+  }
+}
+function init(){
+  ensureDay();
+  maybeAutoBackup();
+  buildNav();
+  const first=document.querySelector('.nav button');
+  if(first)first.classList.add('active');
+  updateClock();
+  setInterval(updateClock,1000);
+  setInterval(()=>checkForNewDay(false),30000);
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)checkForNewDay(true)});
+  window.addEventListener('focus',()=>checkForNewDay(true));
+  window.addEventListener('pageshow',()=>checkForNewDay(true));
+  renderAll();
+}
+init();
 </script></main></div><div id="printReport"></div>
 <script>
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=2.0.1').catch(err => {
+    navigator.serviceWorker.register('./sw.js?v=2.1.0').catch(err => {
       console.warn('Service worker registration skipped:', err);
     });
   });

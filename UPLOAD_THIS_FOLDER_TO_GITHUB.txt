@@ -1,27 +1,24 @@
-PROJECT LUNA V2.0.1 — 매일 실사용 배포본
+PROJECT LUNA V2.1 — 날짜 자동 초기화 + 사진 여행일기
 
-이 폴더 안 파일을 모두 GitHub 저장소 project-luna 최상위(root)에 올리세요.
-이번 버전은 assets 폴더를 사용하지 않습니다.
-이미지 파일이 index.html과 같은 위치에 있어야 합니다.
+이번 수정
+- 한국 현지 날짜 기준으로 날짜를 계산합니다.
+- 자정이 지나거나 아이패드가 다시 활성화되면 새 하루를 자동 확인합니다.
+- 학습/두뇌/생활루틴, 특별미션이 다음 날 자동 초기화됩니다.
+- 오늘의 서프라이즈(힘내기 포인트)가 매일 다시 활성화됩니다.
+- 여행·관찰일기 탭을 추가했습니다.
+- 사진 최대 4장, 날짜, 제목, 장소, 자유 글을 저장할 수 있습니다.
+- 사진은 자동 축소하여 기기 안에 저장합니다.
+- 백업 JSON에 여행일기도 함께 포함됩니다.
 
-반드시 업로드할 파일
-- index.html
-- styles.css
-- sw.js
-- manifest.webmanifest
-- .nojekyll
-- icon-180.png / icon-192.png / icon-512.png
-- 모든 png, jpg 이미지 파일
+GitHub 업로드
+1. 이 ZIP을 압축 해제합니다.
+2. 안의 파일 전체를 project-luna 저장소 최상위(root)에 업로드합니다.
+3. 같은 이름의 index.html, styles.css, sw.js는 새 버전으로 교체합니다.
+4. Pages 배포 완료 후 다음 주소로 먼저 확인합니다.
+   https://maylucymom.github.io/project-luna/?v=210
+5. 이전 화면이 계속 나오면 Safari 탭을 완전히 닫고 위 주소를 다시 엽니다.
 
-업로드 후
-1. GitHub Actions의 Pages build가 초록 체크가 될 때까지 기다립니다.
-2. 주소를 엽니다:
-   https://maylucymom.github.io/project-luna/
-3. 이전 화면이 보이면 Safari에서 새로고침하거나, 설정 > Safari > 방문 기록 및 웹사이트 데이터 지우기 대신
-   먼저 주소 끝에 ?v=201 을 붙여 한 번 엽니다.
-   https://maylucymom.github.io/project-luna/?v=201
-4. 아이패드 Safari 공유 버튼 > 홈 화면에 추가
-
-주의
-- 기존 localStorage 기록은 같은 주소에서 계속 유지됩니다.
-- Safari 웹사이트 데이터를 삭제하면 로컬 기록이 사라질 수 있으므로 설정의 JSON 백업을 주기적으로 받으세요.
+중요
+- 기존 데이터는 같은 주소와 브라우저를 사용하면 유지됩니다.
+- 사진은 localStorage 용량을 사용하므로 너무 많은 고화질 사진을 한꺼번에 보관하지 마세요.
+- 설정 > 데이터 관리에서 JSON 백업을 자주 내려받아 주세요.
