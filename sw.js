@@ -1,4 +1,4 @@
-const CACHE_NAME='project-luna-v2-1-0';
+const CACHE_NAME='project-luna-v2-4-0';
 const APP_FILES=[
   "./",
   "./index.html",

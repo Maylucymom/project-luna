@@ -65,7 +65,7 @@
 
 
 
-<link rel="stylesheet" href="styles.css?v=2.1.0">
+<link rel="stylesheet" href="styles.css?v=2.4.0">
 </head><body><div class="app"><main class="stage"><div class="bg"></div><div class="veil"></div>
 <div class="topbar"><div class="brand darkglass">🌙 PROJECT LUNA</div></div>
 <section id="home" class="scene active"><div class="home-left"><div class="card darkglass"><div class="datetime-main" id="homeDate"></div><div class="datetime-sub" id="homeTime"></div><small id="weatherText">오늘도 반짝이는 하루</small></div><div class="card glass levelbox">
@@ -118,23 +118,23 @@
 </section>
 <section id="brain" class="scene">
   <div class="content">
-    <h1 class="title screen-title">PROJECT LUNA 두뇌루틴</h1>
-    <div class="learning-intro glass">감각과 작업기억·처리속도·시지각·추론을 키우는 짧은 루틴이에요.</div>
-    <div class="encourage">끝까지 생각하고 다시 시도한 과정이 가장 멋져!</div>
+    <h1 class="title screen-title">부모와 함께하는 놀이</h1>
+    <div class="learning-intro glass">하루에 꼭 한 가지, 애착놀이와 두뇌놀이 중에서 골라 부모와 아이가 10분 동안 함께해요.</div>
+    <div class="encourage">애착·그림·음악·처리속도·작업기억 등 오늘 필요한 영역을 골라 즐겁게 함께해 주세요.</div>
     <div class="routine-summary-strip glass">
-      <div><small>오늘 완료</small><strong id="brainDoneCount">0개</strong></div>
-      <div><small>오늘 EXP</small><strong id="brainEarned">0 EXP</strong></div>
-      <div><small>선택 활동</small><strong id="brainSelectedCount">0개</strong></div>
-      <button class="btn soft" onclick="openBrainResult()">💎 성장 결과</button>
+      <div><small>오늘 함께함</small><strong id="brainDoneCount">아직</strong></div>
+      <div><small>특별 보너스</small><strong id="brainEarned">+50P</strong></div>
+      <div><small>활성 놀이</small><strong id="brainSelectedCount">0개</strong></div>
+      <button class="btn soft" onclick="openBrainResult()">💗 함께한 기록</button>
     </div>
     <div class="routine-workspace">
       <aside class="routine-side-list glass brain-side-list">
-        <div class="side-list-heading"><span>🧠</span><b>오늘의 두뇌 목록</b></div>
+        <div class="side-list-heading"><span>🧠</span><b>영역별 함께놀이</b></div>
         <div class="routine-overview vertical-overview" id="brainOverview"></div>
       </aside>
       <div class="routine-main-panel glass magic-notebook-panel brain-notebook">
       <div class="notebook-binding" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
-      <div class="notebook-stamp">BRAIN UP</div>
+      <div class="notebook-stamp">TOGETHER</div>
       <div class="focus" id="brainFocus"></div>
       <div class="routine-character-stage"><img class="routine-task-character" src="diana_running.png" alt="화이팅하며 뛰는 다이애나"></div>
       <div class="dots" id="brainDots"></div>
@@ -299,10 +299,10 @@
             <input id="travelDate" type="date">
           </label>
           <label>제목
-            <input id="travelTitle" maxlength="40" placeholder="예: 제주 바다에서">
+            <input id="travelTitle" maxlength="40" placeholder="예: 제주 바다에서" oninput="updateTravelSaveButton()">
           </label>
           <label>장소
-            <input id="travelPlace" maxlength="40" placeholder="예: 협재해수욕장">
+            <input id="travelPlace" maxlength="40" placeholder="예: 협재해수욕장" oninput="updateTravelSaveButton()">
           </label>
           <label class="travel-photo-label">사진
             <input id="travelPhotoInput" type="file" accept="image/*" multiple onchange="handleTravelPhotos(event)">
@@ -311,14 +311,14 @@
         </div>
 
         <label class="travel-story-label">오늘 기억하고 싶은 이야기
-          <textarea id="travelStory" maxlength="1000" placeholder="사진을 보며 기억나는 일을 자유롭게 적어 보세요. 한 줄만 적어도 좋아요."></textarea>
+          <textarea id="travelStory" maxlength="1000" placeholder="사진을 보며 기억나는 일을 자유롭게 적어 보세요. 한 줄만 적어도 좋아요." oninput="updateTravelSaveButton()"></textarea>
         </label>
 
         <div id="travelPhotoPreview" class="travel-photo-preview"></div>
 
         <div class="travel-actions">
           <button class="btn soft" type="button" onclick="clearTravelDraft()">새로 쓰기</button>
-          <button class="btn gold" type="button" onclick="saveTravelDiary()">📷 여행일기 저장</button>
+          <button id="travelSaveBtn" class="btn gold" type="button">📷 여행일기 저장</button>
         </div>
         <p class="smallnote travel-storage-note">사진은 기기 안에 저장됩니다. 용량을 줄여 보관하며, 중요한 기록은 설정의 백업 파일로 자주 저장해 주세요.</p>
       </div>
@@ -339,7 +339,7 @@
     <h1 class="title screen-title">성장 통계</h1>
     <div class="panel glass card stats-main-card">
       <div class="statgrid">
-        <div class="statbox">루틴 완료<strong id="statRoutine">0회</strong></div>
+        <div class="statbox">학습루틴 완료<strong id="statRoutine">0회</strong></div>
         <div class="statbox">생활습관 완료<strong id="statHabits">0회</strong></div>
         <div class="statbox">읽은 책<strong id="statBooks">0권</strong></div>
         <div class="statbox">특별미션<strong id="statMission">0회</strong></div>
@@ -400,17 +400,18 @@ const defaults={points:0,level:1,gems:0,money:0,moneyLedger:[],bonusDate:'',trav
 '과학·미술 활동|🔬|15분|창의|OFF'
 ],
 brainRoutine:[
-'숫자 기억하기|🔢|5분|작업기억|ON',
-'거꾸로 따라 말하기|↩️|5분|작업기억|ON',
-'연산 스피드|⚡|5분|처리속도|ON',
-'빠르게 같은 그림 찾기|👀|5분|처리속도|ON',
-'틀린그림 찾기|🔍|10분|시지각|ON',
-'숨은그림 찾기|🖼️|10분|시지각|ON',
-'사고력 퍼즐|💡|10분|추론|ON',
-'리듬 따라 하기|🎵|5분|청각기억|OFF',
-'양손 협응 놀이|🤲|5분|협응|OFF',
-'균형·감각 놀이|🤸|5분|감각통합|OFF'
+'아이가 이끄는 특별놀이|💗|10분|애착·아이주도 영역|ON',
+'그림 이어 그리기·만화 만들기|🎨|10분|그림·창의 영역|ON',
+'리듬 따라치기·노래 이어부르기|🎵|10분|음악·청각 영역|ON',
+'틀린그림·숨은그림 빨리 찾기|🔎|10분|처리속도 영역|ON',
+'숫자·동작·단어 순서 기억하기|🧠|10분|작업기억 영역|ON',
+'퍼즐·도형·블록 따라 만들기|🧩|10분|시지각 영역|ON',
+'규칙 찾기·수수께끼·추리놀이|🕵️|10분|추론·문제해결 영역|ON',
+'보드게임 함께하기|🎲|10분|자기조절·사회성 영역|ON',
+'인형·역할놀이·이야기 이어가기|🧸|10분|언어·사회성 영역|ON',
+'공놀이·균형·동작 따라하기|🤸|10분|신체·감각 영역|ON'
 ],
+parentPlayBonus:50,
 brainExpPerTask:20,brainLevelExp:100,brainLevelGem:1,
 moonDiarySteps:[
 {title:'오늘 있었던 일',question:'오늘 나는 무엇을 했나요?',options:['📚 책을 읽었어요','🧮 공부를 했어요','🧩 어려운 문제를 풀었어요','🏫 학교에서 친구들과 지냈어요','🎨 만들기나 그림을 했어요','👨‍👩‍👧 가족과 즐겁게 보냈어요','✨ 새로운 일을 해봤어요']},
@@ -424,7 +425,7 @@ moonDiaryFreePrompt:'오늘 하고 싶은 말을 한 줄로 적어도 좋아요.
 moonDiaryClosing:['오늘의 이야기를 차근차근 완성했구나. 정말 멋져!','네가 느낀 모든 마음은 소중해. 오늘도 잘했어!','오늘의 반짝이는 순간이 달빛일기에 저장됐어!'],
 morningHabits:['물 마시기|💧|2분','영양제·요거트 챙기기|🥛|3분','세수·양치하기|🪥|7분','옷 입기|👗|5분','읽을 책 챙기기|📚|2분','이불 정리하기|🛏️|3분','주변 정리하기|✨|3분'],afterHabits:['물병 정리하기|🧴|2분','연필 깎기|✏️|3분','가방 정리하기|🎒|5분','샤워하기|🛁|10분','옷을 빨래통에 넣기|🧺|2분'],eveningHabits:['주변 정리하기|✨|5분','내일 옷·준비물 챙기기|🗓️|5분','책가방 확인하기|🎒|3분','양치하기|🪥|5분','감사한 일 한 가지 떠올리기|💛|2분','취침 준비하기|🌙|5분'],missions:['기억 장면 그리기','새로운 단어 3개','가족에게 줄거리 이야기','기억 장면 한 줄','모르는 내용 질문하기','럭키 2배 미션','어려운 책 끝까지 읽기','오늘 많이 웃기','가족에게 고마운 점 말하기','보너스 50P'],missionPoint:50,missionApprovalRequired:true,additionalActivities:[['none','추가 활동 없음',0],['review','느낀점 쓰기',50],['quiz','책 퀴즈 만들기',50],['scene','기억 장면 그리기',50],['words','새로운 단어 3개',50],['family','가족에게 줄거리 이야기',50],['readline','기억에 남는 글 읽어주기',50]],morningMoodPrompt:'오늘 아침 기분은 어때?',eveningReflectionPrompt:'오늘 가장 반짝였던 순간은 무엇이었어?',gratitudePrompt:'오늘 고마웠던 일은 무엇이야?',tomorrowPrompt:'내일 해보고 싶은 것은 무엇이야?',closingMessages:['오늘도 정말 수고했어. 네가 해낸 모든 순간이 소중해.','오늘도 한 걸음 성장했어. 편안하게 쉬어도 괜찮아.','오늘의 반짝이는 순간을 기억하며 멋지게 마무리하자!'],rubyMessages:['오늘도 네가 빛나는 하루가 되길 응원해! ✨','천천히 해도 괜찮아. 나는 언제나 네 편이야.','끝까지 생각한 네 모습이 정말 멋져!','오늘도 한 걸음 성장했어. 내일은 더 멋진 모험이 기다리고 있어!','실수는 배우는 과정이야. 다시 시작한 네가 자랑스러워.'],bookCategories:[['normal','일반책',0],['readAloud','한글 음독',10],['leaf','잠수 나뭇잎책',300],['chapter','문고판',500]],shop:[['엄마와 10분 놀이',200,'🎲'],['원하는 책 1권',500,'📕'],['주말 간식 선택권',300,'🍰'],['공주 스티커',150,'👑'],['가족 영화 선택권',600,'🎬'],['특별 외출',1000,'🎡']]}};
 function storageGet(){try{return localStorage.getItem(KEY)||'{}'}catch(e){return '{}'}}
-function storageSet(value){try{localStorage.setItem(KEY,value)}catch(e){}}
+function storageSet(value){try{localStorage.setItem(KEY,value);return true}catch(e){console.error('저장 실패',e);return false}}
 function storageRemove(){try{localStorage.removeItem(KEY)}catch(e){}}
 let state=deepMerge(defaults,JSON.parse(storageGet()));let period='morning',settingTab='approvalSet';
 (function migrateWiscState(){
@@ -438,7 +439,16 @@ let state=deepMerge(defaults,JSON.parse(storageGet()));let period='morning',sett
   });
   if(!Array.isArray(state.settings.learning))state.settings.learning=defaults.settings.learning.slice();
 if(!Array.isArray(state.settings.brainRoutine))state.settings.brainRoutine=defaults.settings.brainRoutine.slice();
-if(!state.brainDone||!Array.isArray(state.brainDone.items))state.brainDone={date:'',items:[],skipped:[]};
+if(!state.settings.parentPlayBrainCategoriesMigrated){
+  state.settings.brainRoutine=defaults.settings.brainRoutine.slice();
+  state.settings.parentPlayBonus=Number(state.settings.parentPlayBonus||defaults.settings.parentPlayBonus||50);
+  state.settings.parentPlayMigrated=true;
+  state.settings.parentPlayBrainCategoriesMigrated=true;
+  storageSet(JSON.stringify(state));
+}
+if(!Number.isFinite(Number(state.settings.parentPlayBonus)))state.settings.parentPlayBonus=50;
+if(!state.brainDone||!Array.isArray(state.brainDone.items))state.brainDone={date:'',items:[],skipped:[],choice:null};
+if(!('choice' in state.brainDone))state.brainDone.choice=null;
 if(!Array.isArray(state.brainDone.skipped))state.brainDone.skipped=[];
 if(!state.brainExp||typeof state.brainExp!=='object')state.brainExp={};
 if(!state.moonDiary||typeof state.moonDiary!=='object')state.moonDiary={};
@@ -472,7 +482,7 @@ function ensureDay(){
   const d=today();
   let changed=false;
   if(state.routineDone.date!==d){state.routineDone={date:d,items:[],skipped:[]};changed=true;}
-  if(state.brainDone.date!==d){state.brainDone={date:d,items:[],skipped:[]};changed=true;}
+  if(state.brainDone.date!==d){state.brainDone={date:d,items:[],skipped:[],choice:null};changed=true;}
   if(state.habitDone.date!==d){
     state.habitDone={date:d,morning:{items:[],skipped:[]},after:{items:[],skipped:[]},evening:{items:[],skipped:[]}};
     changed=true;
@@ -483,8 +493,36 @@ function ensureDay(){
 }
 function parseRows(arr){return (arr||[]).map(x=>{const [name,icon='✨',time='']=(x||'').split('|');return{name,icon,time}}).filter(x=>x.name)}
 function parseLearning(arr){return (arr||[]).map((x,sourceIndex)=>{const [name,icon='🧠',time='10분',domain='두뇌',active='ON']=(x||'').split('|');return{name,icon,time,domain,active:String(active).toUpperCase()!=='OFF',sourceIndex}}).filter(x=>x.name)}function addPoints(n,memo){state.points+=n;state.ledger.unshift({date:today(),amount:n,memo});save()}
-const navItems=[['home','🏠','홈'],['routine','📚','학습루틴'],['brain','🧠','두뇌루틴'],['habits','🏠','생활루틴'],['reading','📚','독서'],['mission','🎴','특별미션'],['map','🗺️','세계관'],['album','📖','독서앨범'],['travel','📷','여행일기'],['bank','🏦','달빛은행'],['shop','🏪','포인트상점'],['stats','📈','통계'],['settings','⚙️','설정']];function buildNav(){nav.innerHTML=navItems.map(([id,i,l])=>`<button data-id="${id}" onclick="showScene('${id}')"><span>${i}</span>${l}</button>`).join('')}function showScene(id){document.querySelectorAll('.scene').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.id===id));if(id==='settings'){pinGate.style.display='block';settingsBody.style.display='none';pinInput.value=''}}
-function renderHome(){const all=[...parseRows(state.settings.morningHabits),...parseRows(state.settings.afterHabits),...parseRows(state.settings.eveningHabits)].length,done=state.habitDone.morning.items.length+state.habitDone.after.items.length+state.habitDone.evening.items.length,rp=Math.round(done/all*100)||0,read=Math.min(100,Math.round(state.books.length/(state.settings.koGoal+state.settings.enGoal)*100)),mp=state.mission.done?100:0,level=Math.floor(state.points/500)+1,levelPct=state.points%500/5;state.level=level;homePoints.textContent=state.points.toLocaleString();homeGems.textContent=state.gems;homeLevel.textContent='Lv. '+level;levelBar.style.width=levelPct+'%';nextLevelText.textContent=`다음 레벨까지 ${500-(state.points%500)}P`;homeRoutinePct.textContent=rp+'%';homeRoutineBar.style.width=rp+'%';const totalBooks=state.books.length,stageIn=Math.min(100,totalBooks%100|| (totalBooks>0?100:0)),stagePct=totalBooks>=1000?100:(totalBooks%100),readingPoints=state.books.reduce((sum,b)=>sum+(Number(b.points)||0),0);homeReadPct.textContent=(totalBooks>=1000?100:stagePct)+'%';homeReadBar.style.width=(totalBooks>=1000?100:stagePct)+'%';homeReadingStage.textContent=`${totalBooks>=1000?100:totalBooks%100}/100권 · ${readingPoints.toLocaleString()}P`;homeMissionPct.textContent=mp+'%';homeMissionBar.style.width=mp+'%';homeLevelPct.textContent=Math.round(levelPct)+'%';homeLevelBar.style.width=levelPct+'%';appTitle.textContent=state.settings.appTitle;appSubtitle.textContent=state.settings.appSubtitle;const rubyList=state.settings.rubyMessages&&state.settings.rubyMessages.length?state.settings.rubyMessages:['오늘도 네가 빛나는 하루가 되길 응원해! ✨'];rubyMessage.textContent=rubyList[(new Date().getDate()-1)%rubyList.length];dailyBonus.style.display=state.bonusDate===today()?'none':'block';dailyBonus.textContent=`🎁 오늘의 서프라이즈 +${state.settings.surprisePoint}P`;
+const navItems=[['home','🏠','홈'],['routine','📚','학습루틴'],['brain','💗','함께놀이'],['habits','🏠','생활루틴'],['reading','📚','독서'],['mission','🎴','특별미션'],['map','🗺️','세계관'],['album','📖','독서앨범'],['travel','📷','여행일기'],['bank','🏦','달빛은행'],['shop','🏪','포인트상점'],['stats','📈','통계'],['settings','⚙️','설정']];function buildNav(){nav.innerHTML=navItems.map(([id,i,l])=>`<button data-id="${id}" onclick="showScene('${id}')"><span>${i}</span>${l}</button>`).join('')}function showScene(id){document.querySelectorAll('.scene').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.id===id));if(id==='settings'){pinGate.style.display='block';settingsBody.style.display='none';pinInput.value=''}}
+function renderHome(){
+  const learningList=parseLearning(state.settings.learning).filter(x=>x.active);
+  const learningDone=(state.routineDone.items||[]).filter(i=>learningList.some(x=>x.sourceIndex===i)).length;
+
+  const parentPlayList=parseLearning(state.settings.brainRoutine).filter(x=>x.active);
+  const parentPlayTotal=parentPlayList.length?1:0;
+  const parentPlayDone=(state.brainDone.items||[]).length?1:0;
+
+  const morningList=parseRows(state.settings.morningHabits);
+  const afterList=parseRows(state.settings.afterHabits);
+  const eveningList=parseRows(state.settings.eveningHabits);
+  const habitTotal=morningList.length+afterList.length+eveningList.length;
+  const habitDone=
+    (state.habitDone.morning.items||[]).filter(i=>i>=0&&i<morningList.length).length+
+    (state.habitDone.after.items||[]).filter(i=>i>=0&&i<afterList.length).length+
+    (state.habitDone.evening.items||[]).filter(i=>i>=0&&i<eveningList.length).length;
+
+  const all=learningList.length+parentPlayTotal+habitTotal;
+  const done=learningDone+parentPlayDone+habitDone;
+  const rp=all?Math.round(done/all*100):0;
+  const read=Math.min(100,Math.round(state.books.length/(state.settings.koGoal+state.settings.enGoal)*100));
+  const mp=state.mission.done?100:0;
+  const level=Math.floor(state.points/500)+1;
+  const levelPct=state.points%500/5;state.level=level;homePoints.textContent=state.points.toLocaleString();homeGems.textContent=state.gems;homeLevel.textContent='Lv. '+level;levelBar.style.width=levelPct+'%';nextLevelText.textContent=`다음 레벨까지 ${500-(state.points%500)}P`;homeRoutinePct.textContent=rp+'%';homeRoutineBar.style.width=rp+'%';
+if(homeRoutineBar){
+  homeRoutineBar.setAttribute('aria-valuenow',String(rp));
+  homeRoutineBar.title=`오늘 전체 루틴 ${done}/${all}개 완료`;
+}
+if(homeRoutinePct)homeRoutinePct.title=`학습 ${learningDone}/${learningList.length} · 함께놀이 ${parentPlayDone}/${parentPlayTotal} · 생활 ${habitDone}/${habitTotal}`;const totalBooks=state.books.length,stageIn=Math.min(100,totalBooks%100|| (totalBooks>0?100:0)),stagePct=totalBooks>=1000?100:(totalBooks%100),readingPoints=state.books.reduce((sum,b)=>sum+(Number(b.points)||0),0);homeReadPct.textContent=(totalBooks>=1000?100:stagePct)+'%';homeReadBar.style.width=(totalBooks>=1000?100:stagePct)+'%';homeReadingStage.textContent=`${totalBooks>=1000?100:totalBooks%100}/100권 · ${readingPoints.toLocaleString()}P`;homeMissionPct.textContent=mp+'%';homeMissionBar.style.width=mp+'%';homeLevelPct.textContent=Math.round(levelPct)+'%';homeLevelBar.style.width=levelPct+'%';appTitle.textContent=state.settings.appTitle;appSubtitle.textContent=state.settings.appSubtitle;const rubyList=state.settings.rubyMessages&&state.settings.rubyMessages.length?state.settings.rubyMessages:['오늘도 네가 빛나는 하루가 되길 응원해! ✨'];rubyMessage.textContent=rubyList[(new Date().getDate()-1)%rubyList.length];dailyBonus.style.display=state.bonusDate===today()?'none':'block';dailyBonus.textContent=`🎁 오늘의 서프라이즈 +${state.settings.surprisePoint}P`;
     const todayReflection=state.moods.evening[today()];
     if(todayReflection){
       const list=state.settings.closingMessages||['오늘도 정말 수고했어.'];
@@ -639,43 +677,115 @@ function addBrainExp(domain,amount){
     toast(`🎉 ${domain} Lv.${after}! 💎${gems}개`);
   }
 }
+function selectParentPlay(i){
+  i=Number(i);
+  const list=parseLearning(state.settings.brainRoutine).filter(x=>x.active);
+  if(!list.some(x=>x.sourceIndex===i))return;
+  state.brainDone.choice=i;
+  storageSet(JSON.stringify(state));
+  renderBrain();
+}
 function renderBrain(){
-  const list=parseLearning(state.settings.brainRoutine).filter(x=>x.active),done=state.brainDone.items;
-  const skipped=(state.brainDone.skipped||[]).filter(i=>!done.includes(i)&&list.some(x=>x.sourceIndex===i));
-  state.brainDone.skipped=skipped;
-  const fresh=list.filter(x=>!done.includes(x.sourceIndex)&&!skipped.includes(x.sourceIndex));
-  const current=fresh.length?fresh[0]:(skipped.length?list.find(x=>x.sourceIndex===skipped[0]):null);
-  brainDoneCount.textContent=done.filter(i=>list.some(x=>x.sourceIndex===i)).length+'개';
-  brainEarned.textContent=(done.filter(i=>list.some(x=>x.sourceIndex===i)).length*Number(state.settings.brainExpPerTask||20))+' EXP';
+  const list=parseLearning(state.settings.brainRoutine).filter(x=>x.active);
+  const completed=state.brainDone.items||[];
+  const doneToday=completed.length>0;
+  let selected=list.find(x=>x.sourceIndex===Number(state.brainDone.choice));
+  if(!selected&&list.length){
+    selected=list[0];
+    state.brainDone.choice=selected.sourceIndex;
+  }
+
+  brainDoneCount.textContent=doneToday?'완료 💗':'아직';
+  brainEarned.textContent='+'+Number(state.settings.parentPlayBonus||50)+'P';
   brainSelectedCount.textContent=list.length+'개';
-  brainOverview.innerHTML=list.map(x=>{
-    const i=x.sourceIndex,info=brainLevelInfo(x.domain);
-    const cls=done.includes(i)?'done':skipped.includes(i)?'skipped':current&&i===current.sourceIndex?'current':'';
-    const mark=done.includes(i)?'✓':skipped.includes(i)?'↺':current&&i===current.sourceIndex?'●':'○';
-    return `<div class="routine-chip ${cls}"><span>${mark}</span><span>${x.icon} ${esc(x.name)}</span><em>${esc(x.domain)} Lv.${info.level}</em></div>`;
-  }).join('');
-  brainDots.textContent=list.map(x=>done.includes(x.sourceIndex)?'●':skipped.includes(x.sourceIndex)?'↺':current&&x.sourceIndex===current.sourceIndex?'◉':'○').join(' ');
-  if(!list.length){brainFocus.innerHTML='<div class="focus-card" style="display:grid;place-items:center;text-align:center"><div><div class="focus-icon">🧠</div><h2>오늘 선택된 두뇌루틴이 없어요.</h2><p>설정에서 오늘 할 활동을 ON으로 골라 주세요.</p></div></div>';return;}
-  if(!current){brainFocus.innerHTML='<div class="focus-card" style="display:grid;place-items:center;text-align:center"><div><div class="focus-icon">💎</div><h2>오늘의 두뇌루틴을 모두 완료했어요!</h2><p>감각과 두뇌의 힘이 차곡차곡 자랐어요.</p></div></div>';return;}
-  const info=brainLevelInfo(current.domain),isRepeat=skipped.includes(current.sourceIndex);
-  brainFocus.innerHTML=`<div class="focus-card"><div class="routine-task-number">${list.findIndex(x=>x.sourceIndex===current.sourceIndex)+1} / ${list.length} ${isRepeat?'· 다시 도전':''}</div><h2 class="routine-task-title">${current.icon} ${esc(current.name)}</h2><div class="routine-task-meta">${esc(current.domain)} Lv.${info.level} · ${info.progress}/${info.need} EXP · ${esc(current.time)}</div><div class="progress"><i style="width:${Math.round(info.progress/info.need*100)}%"></i></div>${isRepeat?'<div class="habit-repeat-note">아까 미뤄둔 활동이에요. 짧게 다시 해볼까요?</div>':''}<div class="focus-actions"><button class="btn soft" onclick="startLearningTimer('${esc(current.time)}','${esc(current.name)}')">시작하기</button><button class="btn pink" onclick="completeBrain(${current.sourceIndex})">완료했어요</button><button class="btn soft" onclick="skipBrain(${current.sourceIndex})">나중에 할래요</button></div></div>`;
+
+  const categoryOrder=['애착·아이주도 영역','그림·창의 영역','음악·청각 영역','처리속도 영역','작업기억 영역','시지각 영역','추론·문제해결 영역','자기조절·사회성 영역','언어·사회성 영역','신체·감각 영역'];
+  const grouped=categoryOrder.map(category=>({
+    category,
+    items:list.filter(x=>x.domain===category)
+  })).filter(group=>group.items.length);
+  const extra=list.filter(x=>!categoryOrder.includes(x.domain));
+  if(extra.length)grouped.push({category:'기타 놀이 영역',items:extra});
+
+  brainOverview.innerHTML=grouped.map(group=>`
+    <div class="parent-play-category">
+      <div class="parent-play-category-title">${esc(group.category)}</div>
+      ${group.items.map(x=>{
+        const done=completed.includes(x.sourceIndex);
+        const current=selected&&x.sourceIndex===selected.sourceIndex;
+        return `<button type="button" class="routine-chip ${done?'done':current?'current':''}" onclick="selectParentPlay(${x.sourceIndex})">
+          <span>${done?'✓':current?'●':'○'}</span>
+          <span>${x.icon} ${esc(x.name)}</span>
+          <em>10분</em>
+        </button>`;
+      }).join('')}
+    </div>`).join('');
+
+  brainDots.textContent=list.map(x=>completed.includes(x.sourceIndex)?'●':selected&&x.sourceIndex===selected.sourceIndex?'◉':'○').join(' ');
+
+  if(!list.length){
+    brainFocus.innerHTML='<div class="focus-card" style="display:grid;place-items:center;text-align:center"><div><div class="focus-icon">💗</div><h2>함께놀이 선택지가 없어요.</h2><p>부모 설정에서 한 가지 이상 ON으로 켜 주세요.</p></div></div>';
+    return;
+  }
+
+  if(doneToday){
+    const finished=list.find(x=>completed.includes(x.sourceIndex))||selected;
+    brainFocus.innerHTML=`<div class="focus-card parent-play-finished">
+      <div class="focus-icon">💞</div>
+      <h2>오늘의 10분 함께놀이 완료!</h2>
+      <p><b>${finished?finished.icon+' '+esc(finished.name):'함께한 놀이'}</b></p>
+      <p>함께 웃고 바라본 시간이 오늘의 가장 큰 보너스예요.</p>
+      <div class="parent-play-bonus">특별 보너스 +${Number(state.settings.parentPlayBonus||50)}P</div>
+      <button class="btn soft" onclick="selectParentPlay(${selected.sourceIndex})">다른 놀이도 살펴보기</button>
+    </div>`;
+    return;
+  }
+
+  brainFocus.innerHTML=`<div class="focus-card parent-play-focus">
+    <div class="routine-task-number">오늘의 꼭 하나 · 부모와 10분</div>
+    <h2 class="routine-task-title">${selected.icon} ${esc(selected.name)}</h2>
+    <div class="routine-task-meta">${esc(selected.domain)} · 10분 · 완료 시 특별 보너스 +${Number(state.settings.parentPlayBonus||50)}P</div>
+    <div class="parent-play-guide">
+      <b>놀이 약속</b>
+      <span>가르치기보다 따라가기</span>
+      <span>질문보다 묘사와 칭찬하기</span>
+      <span>휴대폰을 내려두고 함께 웃기</span>
+    </div>
+    <div class="focus-actions">
+      <button class="btn soft" onclick="startLearningTimer('10분','${esc(selected.name)}')">⏱️ 10분 시작</button>
+      <button class="btn pink" onclick="completeBrain(${selected.sourceIndex})">💗 함께했어요</button>
+      <button class="btn soft" onclick="openParentPlayPicker()">다른 놀이 고르기</button>
+    </div>
+  </div>`;
+}
+function openParentPlayPicker(){
+  const list=parseLearning(state.settings.brainRoutine).filter(x=>x.active);
+  openModal(`<h2>💗 오늘 함께할 놀이</h2><p class="smallnote">애착놀이 또는 두뇌놀이 중 오늘 필요한 영역을 골라 주세요.</p><div class="parent-play-picker">${list.map(x=>`<button onclick="selectParentPlay(${x.sourceIndex});closeModal()"><span>${x.icon}</span><b>${esc(x.name)}</b><small>${esc(x.domain)} · 10분</small></button>`).join('')}</div>`);
 }
 function completeBrain(i){
-  i=Number(i);const item=parseLearning(state.settings.brainRoutine).find(x=>x.sourceIndex===i);
-  if(!item||state.brainDone.items.includes(i))return;
-  state.brainDone.items.push(i);state.brainDone.skipped=(state.brainDone.skipped||[]).filter(x=>x!==i);
-  addBrainExp(item.domain,Number(state.settings.brainExpPerTask||20));save();
-  playSound('success');sparkleBurst();toast('🧠 두뇌 EXP가 자랐어요!');
+  i=Number(i);
+  const item=parseLearning(state.settings.brainRoutine).find(x=>x.sourceIndex===i);
+  if(!item||state.brainDone.items.length)return;
+  state.brainDone.items=[i];
+  state.brainDone.choice=i;
+  state.brainDone.skipped=[];
+  addPoints(Number(state.settings.parentPlayBonus||50),'부모와 10분 함께놀이');
+  playSound('success');
+  sparkleBurst();
+  toast('💗 함께한 10분이 오늘의 특별한 선물이 되었어요!');
 }
 function skipBrain(i){
   i=Number(i);if(state.brainDone.items.includes(i))return;
   state.brainDone.skipped=(state.brainDone.skipped||[]).filter(x=>x!==i);state.brainDone.skipped.push(i);
-  save();toast('↺ 마지막에 다시 보여줄게요.');
+  save();toast('다른 놀이를 골라도 좋아요.');
 }
 function openBrainResult(){
-  const domains=[...new Set(parseLearning(state.settings.brainRoutine).filter(x=>x.active).map(x=>x.domain))];
-  const rows=domains.map(d=>{const x=brainLevelInfo(d);return `<div class="row"><b>${esc(d)}</b><span>Lv.${x.level} · ${x.progress}/${x.need} EXP</span></div>`}).join('');
-  openModal(`<h2>🧠 두뇌루틴 성장</h2>${rows}<p>영역 레벨이 오를 때마다 보석이 지급돼요.</p><button class="btn" onclick="closeModal()">확인</button>`);
+  const list=parseLearning(state.settings.brainRoutine).filter(x=>x.active);
+  const done=state.brainDone.items||[];
+  const item=list.find(x=>done.includes(x.sourceIndex));
+  openModal(`<h2>💗 오늘의 함께놀이</h2>
+    ${item?`<p style="font-size:20px"><b>${item.icon} ${esc(item.name)}</b></p><p>부모와 아이가 10분을 함께했어요.</p><p>특별 보너스 +${Number(state.settings.parentPlayBonus||50)}P</p>`:'<p>아직 오늘의 10분 함께놀이를 하지 않았어요.</p><p>잘하려고 하지 않아도 괜찮아요. 아이가 고른 놀이를 따라가 주세요.</p>'}
+    <button class="btn" onclick="closeModal()">확인</button>`);
 }
 
 
@@ -877,6 +987,7 @@ function clearTravelDraft(){
   if(storyEl)storyEl.value='';
   if(inputEl)inputEl.value='';
   renderTravelPhotoPreview();
+  updateTravelSaveButton();
 }
 function renderTravelPhotoPreview(){
   const box=document.getElementById('travelPhotoPreview');
@@ -884,6 +995,7 @@ function renderTravelPhotoPreview(){
   box.innerHTML=travelDraftPhotos.length
     ? travelDraftPhotos.map((src,i)=>`<div class="travel-preview-item"><img src="${src}" alt="선택한 사진 ${i+1}"><button type="button" onclick="removeTravelDraftPhoto(${i})">×</button></div>`).join('')
     : '<div class="travel-photo-empty">사진을 고르면 여기에 미리 보여요.</div>';
+  updateTravelSaveButton();
 }
 function removeTravelDraftPhoto(index){
   travelDraftPhotos.splice(index,1);
@@ -930,12 +1042,42 @@ async function handleTravelPhotos(event){
   renderTravelPhotoPreview();
   toast(`📷 사진 ${travelDraftPhotos.length}장을 준비했어요.`);
 }
+function updateTravelSaveButton(){
+  const btn=document.getElementById('travelSaveBtn');
+  if(!btn)return;
+  const hasText=[
+    document.getElementById('travelTitle')?.value,
+    document.getElementById('travelPlace')?.value,
+    document.getElementById('travelStory')?.value
+  ].some(v=>String(v||'').trim());
+  const ready=hasText||travelDraftPhotos.length>0;
+  btn.disabled=!ready;
+  btn.classList.toggle('ready',ready);
+  btn.textContent=editingTravelId?'📷 여행일기 수정 저장':'📷 여행일기 저장';
+}
+function bindTravelSaveButton(){
+  const btn=document.getElementById('travelSaveBtn');
+  if(!btn||btn.dataset.bound==='1')return;
+  btn.dataset.bound='1';
+  btn.addEventListener('click',function(e){
+    e.preventDefault();
+    e.stopPropagation();
+    saveTravelDiary();
+  });
+  updateTravelSaveButton();
+}
 function saveTravelDiary(){
   const date=(document.getElementById('travelDate')?.value||today());
   const title=(document.getElementById('travelTitle')?.value||'').trim();
   const place=(document.getElementById('travelPlace')?.value||'').trim();
   const story=(document.getElementById('travelStory')?.value||'').trim();
-  if(!title&&!place&&!story&&!travelDraftPhotos.length)return toast('사진이나 이야기를 하나 이상 남겨 주세요.');
+
+  if(!title&&!place&&!story&&!travelDraftPhotos.length){
+    toast('사진이나 이야기를 하나 이상 남겨 주세요.');
+    updateTravelSaveButton();
+    return;
+  }
+
   const entry={
     id:editingTravelId||('travel_'+Date.now()),
     date,
@@ -945,18 +1087,26 @@ function saveTravelDiary(){
     photos:[...travelDraftPhotos],
     savedAt:new Date().toISOString()
   };
-  const idx=state.travelDiaries.findIndex(x=>x.id===entry.id);
-  if(idx>=0)state.travelDiaries[idx]=entry;
-  else state.travelDiaries.unshift(entry);
-  try{
-    storageSet(JSON.stringify(state));
-  }catch(err){
-    toast('사진 용량이 커서 저장하지 못했어요. 사진 수를 줄여 주세요.');
+
+  const nextDiaries=[...(state.travelDiaries||[])];
+  const idx=nextDiaries.findIndex(x=>x.id===entry.id);
+  if(idx>=0)nextDiaries[idx]=entry;
+  else nextDiaries.unshift(entry);
+
+  const previous=state.travelDiaries;
+  state.travelDiaries=nextDiaries;
+  const ok=storageSet(JSON.stringify(state));
+
+  if(!ok){
+    state.travelDiaries=previous;
+    toast('저장 공간이 부족해요. 사진 수를 줄이거나 기존 사진일기를 백업 후 정리해 주세요.');
     return;
   }
+
   clearTravelDraft();
   renderAll();
-  playSound('magic');sparkleBurst();
+  playSound('magic');
+  sparkleBurst();
   toast('📷 여행일기를 저장했어요!');
 }
 function editTravelDiary(id){
@@ -970,6 +1120,7 @@ function editTravelDiary(id){
   travelPlace.value=entry.place||'';
   travelStory.value=entry.story||'';
   renderTravelPhotoPreview();
+  updateTravelSaveButton();
   document.querySelector('.travel-editor-card')?.scrollIntoView({behavior:'smooth',block:'start'});
 }
 function deleteTravelDiary(id){
@@ -982,6 +1133,7 @@ function openTravelPhoto(src){
   openModal(`<div class="travel-photo-modal"><img src="${src}" alt="여행 사진"><button class="btn soft" onclick="closeModal()">닫기</button></div>`);
 }
 function renderTravelDiary(){
+  bindTravelSaveButton();
   const dateEl=document.getElementById('travelDate');
   if(dateEl&&!dateEl.value)dateEl.value=today();
   renderTravelPhotoPreview();
@@ -1293,7 +1445,7 @@ const settingDefs=[['approvalSet','🔐 승인센터'],['basic','⚙️ 기본 �
       ${reviewedShop.length?'<button class="btn soft" onclick="clearReviewedShopRequests()">처리 기록 정리</button>':''}
     </div>`;
 }
-if(settingTab==='basic')h=`<div class="setting-section"><h3>앱 기본</h3><div class="form"><label>앱 제목<input id="sTitle" value="${esc(s.appTitle)}"></label><label>부제<input id="sSub" value="${esc(s.appSubtitle)}"></label><label>부모 PIN<input id="sPin" value="${esc(s.pin)}" maxlength="4"></label><label>오늘의 서프라이즈 포인트<input id="sSurprise" type="number" value="${s.surprisePoint}"></label><label class="switch">효과음 <input id="sSound" type="checkbox" ${s.sound?'checked':''}></label><label class="switch">배경음 <input id="sBgm" type="checkbox" ${s.bgm?'checked':''}></label></div></div><div class="setting-section"><h3>🦄 루비의 매일 한마디</h3><p class="smallnote">한 줄에 한 문장씩 입력하면 날짜에 따라 매일 바뀝니다.</p><textarea id="sRubyMessages" style="width:100%;min-height:150px">${(s.rubyMessages||[]).join('\n')}</textarea></div><div class="setting-section"><h3>☀️ 오전 마음 체크</h3><label>질문<input id="sMorningCheckQuestion" value="${esc(s.morningCheckQuestion||'')}"></label><p class="smallnote">답변을 한 줄에 하나씩 입력하세요.</p><textarea id="sMorningCheckOptions" style="width:100%;min-height:150px">${(s.morningCheckOptions||[]).join('\n')}</textarea></div><button class="btn" onclick="saveBasic()">기본 설정 저장</button>`;if(settingTab==='routineSet')h=`<div class="setting-section"><h3>📚 선택형 학습루틴 10개</h3><p class="smallnote">각 활동의 ON/OFF를 스위치로 선택하고 이름·아이콘·시간·영역도 수정할 수 있어요.</p><div class="routine-editor-head"><span>사용</span><span>아이콘</span><span>활동명</span><span>시간</span><span>영역</span></div><div id="learningEditor" class="routine-editor"></div></div><div class="setting-section"><h3>🧠 선택형 두뇌루틴 10개</h3><div class="routine-editor-head"><span>사용</span><span>아이콘</span><span>활동명</span><span>시간</span><span>영역</span></div><div id="brainEditor" class="routine-editor"></div><div class="editor-grid"><label>활동 1개 EXP<input id="sBrainExpPerTask" type="number" value="${s.brainExpPerTask}"></label><label>레벨업 필요 EXP<input id="sBrainLevelExp" type="number" value="${s.brainLevelExp}"></label><label>레벨업 보석<input id="sBrainLevelGem" type="number" value="${s.brainLevelGem}"></label></div></div><div class="setting-section"><h3>🏠 필수 생활루틴</h3><div class="editor-grid"><label>🌞 아침<textarea id="sMorningHabits">${s.morningHabits.join('\n')}</textarea></label><label>🏫 하교 후<textarea id="sAfterHabits">${s.afterHabits.join('\n')}</textarea></label><label>🌙 저녁<textarea id="sEveningHabits">${s.eveningHabits.join('\n')}</textarea></label></div><label>완료 1개 포인트<input id="sRoutinePoint" type="number" value="${s.routinePoint}"></label></div><button class="btn" onclick="saveRoutineSettings()">루틴 저장</button>`;if(settingTab==='readingSet')h=`<div class="setting-section"><h3>독서·포인트 규칙</h3><div class="editor-grid"><label>책 1권 포인트<input id="sBookPoint" type="number" value="${s.bookPoint}"></label><label>추가활동 포인트<input id="sActivityPoint" type="number" value="${s.activityPoint}"></label><label>보석 교환 필요 개수<input id="sGemGoal" type="number" value="${s.gemGoal}"></label><label>보석 교환 포인트<input id="sGemExchange" type="number" value="${s.gemExchange}"></label><label>한글책 목표<input id="sKoGoal" type="number" value="${s.koGoal}"></label><label>영어책 목표<input id="sEnGoal" type="number" value="${s.enGoal}"></label><label>세계관 지역 개방 간격<input id="sWorldStep" type="number" value="${s.worldStep||100}"></label></div><p class="smallnote">기본값 100권: 100·200·300·400·500·600·700·800·900·1,000권에 총 10개 지역이 열립니다.</p></div><div class="setting-section"><h3>📚 책 분류와 보너스 포인트</h3><p class="smallnote">한 줄에 분류명|추가포인트 형식으로 입력하세요. 예: 한글 음독|10</p><textarea id="sBookCategories" style="width:100%;min-height:150px">${(s.bookCategories||[]).map(x=>x[1]+'|'+x[2]).join('\n')}</textarea></div><div class="setting-section"><h3>✨ 독서 추가 활동</h3><div class="activity-editor-note">한 줄에 활동명|포인트 형식으로 입력하세요. 첫 줄은 ‘추가 활동 없음|0’을 권장합니다.</div><textarea id="sAdditionalActivities" style="width:100%;min-height:190px;margin-top:8px">${(s.additionalActivities||[]).map(x=>x[1]+'|'+x[2]).join('\n')}</textarea></div><button class="btn" onclick="saveReadingSettings()">독서 설정 저장</button>`;if(settingTab==='missionSet')h=`<div class="setting-section"><h3>카드 10장</h3><p class="smallnote">한 줄에 카드 하나씩 입력하세요.</p><textarea id="sMissions" style="width:100%;min-height:260px">${s.missions.join('\n')}</textarea><label>완료 포인트<input id="sMissionPoint" type="number" value="${s.missionPoint}"></label><label class="setting-check"><span><b>부모 승인 필요</b><br><small>끄면 아이가 완료 버튼을 누르는 즉시 포인트가 지급됩니다.</small></span><input id="sMissionApproval" type="checkbox" ${s.missionApprovalRequired?'checked':''}></label></div><button class="btn" onclick="saveMissionSettings()">특별미션 저장</button> <button class="btn soft" onclick="resetMissionToday()">오늘 선택 초기화</button>`;if(settingTab==='shopSet')h=`<div class="setting-section"><h3>상점 상품</h3><p class="smallnote">한 줄에 상품명|가격|아이콘 형식입니다.</p><textarea id="sShop" style="width:100%;min-height:260px">${s.shop.map(x=>x.join('|')).join('\n')}</textarea></div><button class="btn" onclick="saveShopSettings()">상점 저장</button>`;if(settingTab==='diarySet')h=`<div class="setting-section"><h3>🌙 체크형 달빛일기</h3><p class="smallnote">아이에게는 질문마다 체크형 답안으로 보입니다. 형식: 제목||질문||선택지1|선택지2|선택지3</p><textarea id="sMoonDiarySteps" style="width:100%;min-height:300px">${(s.moonDiarySteps||[]).map(x=>x.title+'||'+x.question+'||'+(x.options||[]).join('|')).join('\n')}</textarea><label>자유 한 줄 안내문<input id="sMoonDiaryFreePrompt" value="${esc(s.moonDiaryFreePrompt||'')}"></label><label>완성 보상 포인트<input id="sMoonDiaryReward" type="number" value="${s.moonDiaryRewardPoint||0}"></label><p class="smallnote">마무리 문구를 한 줄에 하나씩 입력하세요.</p><textarea id="sMoonDiaryClosing" style="width:100%;min-height:120px">${(s.moonDiaryClosing||[]).join('\n')}</textarea></div><button class="btn" onclick="saveDiarySettings()">달빛일기 저장</button>`;if(settingTab==='dataSet')h=`<div class="backup-center-hero">
+if(settingTab==='basic')h=`<div class="setting-section"><h3>앱 기본</h3><div class="form"><label>앱 제목<input id="sTitle" value="${esc(s.appTitle)}"></label><label>부제<input id="sSub" value="${esc(s.appSubtitle)}"></label><label>부모 PIN<input id="sPin" value="${esc(s.pin)}" maxlength="4"></label><label>오늘의 서프라이즈 포인트<input id="sSurprise" type="number" value="${s.surprisePoint}"></label><label class="switch">효과음 <input id="sSound" type="checkbox" ${s.sound?'checked':''}></label><label class="switch">배경음 <input id="sBgm" type="checkbox" ${s.bgm?'checked':''}></label></div></div><div class="setting-section"><h3>🦄 루비의 매일 한마디</h3><p class="smallnote">한 줄에 한 문장씩 입력하면 날짜에 따라 매일 바뀝니다.</p><textarea id="sRubyMessages" style="width:100%;min-height:150px">${(s.rubyMessages||[]).join('\n')}</textarea></div><div class="setting-section"><h3>☀️ 오전 마음 체크</h3><label>질문<input id="sMorningCheckQuestion" value="${esc(s.morningCheckQuestion||'')}"></label><p class="smallnote">답변을 한 줄에 하나씩 입력하세요.</p><textarea id="sMorningCheckOptions" style="width:100%;min-height:150px">${(s.morningCheckOptions||[]).join('\n')}</textarea></div><button class="btn" onclick="saveBasic()">기본 설정 저장</button>`;if(settingTab==='routineSet')h=`<div class="setting-section"><h3>📚 선택형 학습루틴 10개</h3><p class="smallnote">각 활동의 ON/OFF를 스위치로 선택하고 이름·아이콘·시간·영역도 수정할 수 있어요.</p><div class="routine-editor-head"><span>사용</span><span>아이콘</span><span>활동명</span><span>시간</span><span>영역</span></div><div id="learningEditor" class="routine-editor"></div></div><div class="setting-section"><h3>💗 부모와 함께하는 놀이 10개</h3><p class="smallnote">기본 애착놀이와 두뇌놀이가 함께 들어 있습니다. 그림·음악·처리속도·작업기억·시지각·추론 등 영역명을 옆 칸에서 자유롭게 수정할 수 있고, 저장 시 시간은 모두 10분으로 맞춰집니다.</p><div class="routine-editor-head"><span>사용</span><span>아이콘</span><span>활동명</span><span>시간</span><span>놀이·두뇌 영역</span></div><div id="brainEditor" class="routine-editor"></div><div class="editor-grid"><label>함께놀이 특별 보너스<input id="sParentPlayBonus" type="number" value="${s.parentPlayBonus||50}"></label></div></div><div class="setting-section"><h3>🏠 필수 생활루틴</h3><div class="editor-grid"><label>🌞 아침<textarea id="sMorningHabits">${s.morningHabits.join('\n')}</textarea></label><label>🏫 하교 후<textarea id="sAfterHabits">${s.afterHabits.join('\n')}</textarea></label><label>🌙 저녁<textarea id="sEveningHabits">${s.eveningHabits.join('\n')}</textarea></label></div><label>완료 1개 포인트<input id="sRoutinePoint" type="number" value="${s.routinePoint}"></label></div><button class="btn" onclick="saveRoutineSettings()">루틴 저장</button>`;if(settingTab==='readingSet')h=`<div class="setting-section"><h3>독서·포인트 규칙</h3><div class="editor-grid"><label>책 1권 포인트<input id="sBookPoint" type="number" value="${s.bookPoint}"></label><label>추가활동 포인트<input id="sActivityPoint" type="number" value="${s.activityPoint}"></label><label>보석 교환 필요 개수<input id="sGemGoal" type="number" value="${s.gemGoal}"></label><label>보석 교환 포인트<input id="sGemExchange" type="number" value="${s.gemExchange}"></label><label>한글책 목표<input id="sKoGoal" type="number" value="${s.koGoal}"></label><label>영어책 목표<input id="sEnGoal" type="number" value="${s.enGoal}"></label><label>세계관 지역 개방 간격<input id="sWorldStep" type="number" value="${s.worldStep||100}"></label></div><p class="smallnote">기본값 100권: 100·200·300·400·500·600·700·800·900·1,000권에 총 10개 지역이 열립니다.</p></div><div class="setting-section"><h3>📚 책 분류와 보너스 포인트</h3><p class="smallnote">한 줄에 분류명|추가포인트 형식으로 입력하세요. 예: 한글 음독|10</p><textarea id="sBookCategories" style="width:100%;min-height:150px">${(s.bookCategories||[]).map(x=>x[1]+'|'+x[2]).join('\n')}</textarea></div><div class="setting-section"><h3>✨ 독서 추가 활동</h3><div class="activity-editor-note">한 줄에 활동명|포인트 형식으로 입력하세요. 첫 줄은 ‘추가 활동 없음|0’을 권장합니다.</div><textarea id="sAdditionalActivities" style="width:100%;min-height:190px;margin-top:8px">${(s.additionalActivities||[]).map(x=>x[1]+'|'+x[2]).join('\n')}</textarea></div><button class="btn" onclick="saveReadingSettings()">독서 설정 저장</button>`;if(settingTab==='missionSet')h=`<div class="setting-section"><h3>카드 10장</h3><p class="smallnote">한 줄에 카드 하나씩 입력하세요.</p><textarea id="sMissions" style="width:100%;min-height:260px">${s.missions.join('\n')}</textarea><label>완료 포인트<input id="sMissionPoint" type="number" value="${s.missionPoint}"></label><label class="setting-check"><span><b>부모 승인 필요</b><br><small>끄면 아이가 완료 버튼을 누르는 즉시 포인트가 지급됩니다.</small></span><input id="sMissionApproval" type="checkbox" ${s.missionApprovalRequired?'checked':''}></label></div><button class="btn" onclick="saveMissionSettings()">특별미션 저장</button> <button class="btn soft" onclick="resetMissionToday()">오늘 선택 초기화</button>`;if(settingTab==='shopSet')h=`<div class="setting-section"><h3>상점 상품</h3><p class="smallnote">한 줄에 상품명|가격|아이콘 형식입니다.</p><textarea id="sShop" style="width:100%;min-height:260px">${s.shop.map(x=>x.join('|')).join('\n')}</textarea></div><button class="btn" onclick="saveShopSettings()">상점 저장</button>`;if(settingTab==='diarySet')h=`<div class="setting-section"><h3>🌙 체크형 달빛일기</h3><p class="smallnote">아이에게는 질문마다 체크형 답안으로 보입니다. 형식: 제목||질문||선택지1|선택지2|선택지3</p><textarea id="sMoonDiarySteps" style="width:100%;min-height:300px">${(s.moonDiarySteps||[]).map(x=>x.title+'||'+x.question+'||'+(x.options||[]).join('|')).join('\n')}</textarea><label>자유 한 줄 안내문<input id="sMoonDiaryFreePrompt" value="${esc(s.moonDiaryFreePrompt||'')}"></label><label>완성 보상 포인트<input id="sMoonDiaryReward" type="number" value="${s.moonDiaryRewardPoint||0}"></label><p class="smallnote">마무리 문구를 한 줄에 하나씩 입력하세요.</p><textarea id="sMoonDiaryClosing" style="width:100%;min-height:120px">${(s.moonDiaryClosing||[]).join('\n')}</textarea></div><button class="btn" onclick="saveDiarySettings()">달빛일기 저장</button>`;if(settingTab==='dataSet')h=`<div class="backup-center-hero">
   <div class="backup-orb">💾</div>
   <div><h2>엄마 전용 백업센터</h2><p>아이의 독서·루틴·달빛일기·포인트·설정을 안전하게 보관해요.</p></div>
 </div>
@@ -1336,7 +1488,7 @@ if(settingTab==='basic')h=`<div class="setting-section"><h3>앱 기본</h3><div 
       </label>
       <label>가장 오래 본 화면
         <select id="parentMemoFavorite">
-          <option>홈</option><option>학습루틴</option><option>두뇌루틴</option><option>생활루틴</option>
+          <option>홈</option><option>학습루틴</option><option>부모와 함께하는 놀이</option><option>생활루틴</option>
           <option>독서 프로젝트</option><option>특별미션</option><option>세계관</option>
           <option>독서 기록 통장</option><option>달빛은행</option><option>포인트 상점</option>
           <option>달빛일기</option><option>기타</option>
@@ -1374,7 +1526,28 @@ if(settingTab==='dataSet'){
 }
 if(settingTab==='routineSet'){routineEditorRows('learningEditor',s.learning,'learning');routineEditorRows('brainEditor',s.brainRoutine,'brain')}}
 function esc(x){return String(x).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;')}function lines(id){return document.getElementById(id).value.split(/\n/).map(x=>x.trim()).filter(Boolean)}function saveBasic(){Object.assign(state.settings,{appTitle:sTitle.value.trim(),appSubtitle:sSub.value.trim(),pin:sPin.value.trim()||state.settings.pin,surprisePoint:+sSurprise.value||20,sound:sSound.checked,bgm:sBgm.checked,rubyMessages:lines('sRubyMessages'),morningCheckQuestion:sMorningCheckQuestion.value.trim(),morningCheckOptions:lines('sMorningCheckOptions')});save();toast('기본 설정을 저장했어요.')}
-function saveRoutineSettings(){Object.assign(state.settings,{learning:collectRoutineEditor('learningEditor'),brainRoutine:collectRoutineEditor('brainEditor'),brainExpPerTask:+sBrainExpPerTask.value||20,brainLevelExp:+sBrainLevelExp.value||100,brainLevelGem:+sBrainLevelGem.value||1,morningHabits:lines('sMorningHabits'),afterHabits:lines('sAfterHabits'),eveningHabits:lines('sEveningHabits'),routinePoint:+sRoutinePoint.value||10});save();toast('학습·두뇌·생활루틴 설정을 저장했어요.');}
+function saveRoutineSettings(){
+  const parentPlay=collectRoutineEditor('brainEditor').map(line=>{
+    const p=line.split('|');
+    p[2]='10분';
+    return p.join('|');
+  });
+  if(!parentPlay.some(line=>line.endsWith('|ON'))){
+    toast('부모와 함께하는 놀이는 최소 한 가지를 ON으로 켜 주세요.');
+    return;
+  }
+  Object.assign(state.settings,{
+    learning:collectRoutineEditor('learningEditor'),
+    brainRoutine:parentPlay,
+    parentPlayBonus:+document.getElementById('sParentPlayBonus').value||50,
+    morningHabits:lines('sMorningHabits'),
+    afterHabits:lines('sAfterHabits'),
+    eveningHabits:lines('sEveningHabits'),
+    routinePoint:+sRoutinePoint.value||10
+  });
+  save();
+  toast('학습·함께놀이·생활루틴 설정을 저장했어요.');
+}
 function saveReadingSettings(){Object.assign(state.settings,{bookPoint:+sBookPoint.value||10,activityPoint:+sActivityPoint.value||50,gemGoal:+sGemGoal.value||10,gemExchange:+sGemExchange.value||120,koGoal:+sKoGoal.value||1000,enGoal:+sEnGoal.value||1000,worldStep:+sWorldStep.value||100,bookCategories:lines('sBookCategories').map((line,i)=>{const parts=line.split('|');const name=(parts[0]||'분류').trim(),bonus=Number(parts[1])||0;return['cat'+i,name,bonus]}),additionalActivities:lines('sAdditionalActivities').map((line,i)=>{const parts=line.split('|');const name=(parts[0]||'활동').trim(),points=Number(parts[1])||0;return['act'+i,name,points]})});save();toast('독서 설정을 저장했어요.')}function saveDiarySettings(){
   const steps=lines('sMoonDiarySteps').map(line=>{const p=line.split('||');return{title:(p[0]||'단계').trim(),question:(p[1]||'골라 주세요').trim(),options:(p[2]||'').split('|').map(x=>x.trim()).filter(Boolean)}}).filter(x=>x.options.length);
   state.settings.moonDiarySteps=steps;state.settings.moonDiaryFreePrompt=sMoonDiaryFreePrompt.value.trim();state.settings.moonDiaryRewardPoint=+sMoonDiaryReward.value||0;state.settings.moonDiaryClosing=lines('sMoonDiaryClosing');save();toast('달빛일기 설정을 저장했어요.');
@@ -1549,7 +1722,7 @@ function saveBackupSettings(){
   refreshBackupCenter();
 }
 function exportData(){
-  const payload={app:'PROJECT LUNA',version:'2.1.0-daily-reset-travel',exportedAt:new Date().toISOString(),data:state};
+  const payload={app:'PROJECT LUNA',version:'2.4.0-home-routine-progress-fix',exportedAt:new Date().toISOString(),data:state};
   const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
   const a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
@@ -1586,8 +1759,8 @@ function renderAll(){ensureDay();safeRender('book categories',renderBookCategori
 
 Object.assign(window,{
   openMorningCheck,saveMorningCheck,openMoonDiary,selectMoonDiaryAnswer,moonDiaryNext,chooseMoonDiaryOption,moonDiaryBack,restartMoonDiary,saveMoonDiary,saveSimpleMoonDiary,openMorningMood,openDayReflection,saveMorningMood,saveDayReflection,
-  chooseMission,completeMissionRequest,approveMission,approveMissionFromSettings,completeHabit,skipHabit,skipRoutine,startLearningTimer,completeBrain,skipBrain,openBrainResult,bindWorldMapClicks,openWorldRegion,enterWorldRegion,closeWorldRegion,approveShopRequest,rejectShopRequest,clearReviewedShopRequests,rejectMissionFromSettings,
-  playSound,sparkleBurst,handleTravelPhotos,removeTravelDraftPhoto,clearTravelDraft,saveTravelDiary,editTravelDiary,deleteTravelDiary,openTravelPhoto,saveParentMemo,deleteParentMemo,editParentMemo,saveParentMemoSettings,createManualSnapshot,restoreSnapshot,restoreLatestSnapshot,clearBackupSnapshots,saveBackupSettings
+  chooseMission,completeMissionRequest,approveMission,approveMissionFromSettings,completeHabit,skipHabit,skipRoutine,startLearningTimer,selectParentPlay,openParentPlayPicker,completeBrain,skipBrain,openBrainResult,bindWorldMapClicks,openWorldRegion,enterWorldRegion,closeWorldRegion,approveShopRequest,rejectShopRequest,clearReviewedShopRequests,rejectMissionFromSettings,
+  playSound,sparkleBurst,handleTravelPhotos,removeTravelDraftPhoto,clearTravelDraft,updateTravelSaveButton,saveTravelDiary,editTravelDiary,deleteTravelDiary,openTravelPhoto,saveParentMemo,deleteParentMemo,editParentMemo,saveParentMemoSettings,createManualSnapshot,restoreSnapshot,restoreLatestSnapshot,clearBackupSnapshots,saveBackupSettings
 });
 
 let observedDay=today();
@@ -1619,7 +1792,7 @@ init();
 <script>
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=2.1.0').catch(err => {
+    navigator.serviceWorker.register('./sw.js?v=2.4.0').catch(err => {
       console.warn('Service worker registration skipped:', err);
     });
   });
