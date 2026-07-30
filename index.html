@@ -65,7 +65,7 @@
 
 
 
-<link rel="stylesheet" href="styles.css?v=2.4.0">
+<link rel="stylesheet" href="styles.css?v=2.5.0">
 </head><body><div class="app"><main class="stage"><div class="bg"></div><div class="veil"></div>
 <div class="topbar"><div class="brand darkglass">🌙 PROJECT LUNA</div></div>
 <section id="home" class="scene active"><div class="home-left"><div class="card darkglass"><div class="datetime-main" id="homeDate"></div><div class="datetime-sub" id="homeTime"></div><small id="weatherText">오늘도 반짝이는 하루</small></div><div class="card glass levelbox">
@@ -145,7 +145,7 @@
 
 <section id="habits" class="scene">
   <div class="content">
-    <h1 class="title screen-title">매일 생활루틴</h1>
+    <h1 class="title screen-title">선택형 생활루틴</h1>
     <div class="tabs" id="habitPeriodTabs"></div><div class="encourage" id="habitEncourage">작은 습관 하나가 멋진 하루를 만들어요.</div>
 
     <div class="habit-summary-strip glass">
@@ -157,7 +157,7 @@
 
     <div class="routine-workspace habit-workspace">
       <aside class="routine-side-list glass habit-side-list">
-        <div class="side-list-heading"><span>🌱</span><b>지금 시간의 생활습관</b></div>
+        <div class="side-list-heading"><span>🌱</span><b>영역별 생활습관</b></div>
         <div class="habit-overview vertical-overview" id="habitOverview"></div>
       </aside>
 
@@ -203,7 +203,7 @@
             <option value="한글">📕 가나다 · 한글책</option>
             <option value="영어">📘 ABC · 영어책</option>
           </select>
-          <input id="bookTitle" placeholder="책 제목">
+          <div class="book-search-wrap"><input id="bookTitle" placeholder="책 제목을 검색하거나 직접 입력" oninput="searchLocalBookCatalog()"><div id="bookSearchResults" class="book-search-results"></div></div><input id="bookAuthor" placeholder="저자 (선택)"><label class="book-cover-upload">표지 사진 선택<input id="bookCoverInput" type="file" accept="image/*" onchange="handleBookCover(event)"></label><div id="bookCoverPreview" class="book-cover-preview"></div>
           <select id="bookType"></select>
           <select id="bookActivity"></select>
           <button class="btn" onclick="addBook()">📚 책 기록 저장</button>
@@ -251,7 +251,7 @@
       </div>
       <div class="ledger-rings" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
       <div class="ledger-page ledger-record-page">
-        <div id="albumList" class="list ledger-list"></div>
+        <div class="album-book-summary"><strong id="albumBookTotal">0권</strong><span id="albumPointTotal">0P 적립</span></div><div id="albumList" class="book-shelf-grid"></div>
       </div>
     </div>
   </div>
@@ -325,7 +325,7 @@
 
       <div class="panel glass card travel-list-card">
         <div class="travel-list-head">
-          <div><h2>나의 여행 앨범</h2><p id="travelCountText">0개의 순간</p></div>
+          <div><h2>나의 작은 사진첩</h2><p id="travelCountText">0개의 순간</p></div>
           <span>🌿</span>
         </div>
         <div id="travelDiaryList" class="travel-diary-list"></div>
@@ -411,7 +411,7 @@ brainRoutine:[
 '인형·역할놀이·이야기 이어가기|🧸|10분|언어·사회성 영역|ON',
 '공놀이·균형·동작 따라하기|🤸|10분|신체·감각 영역|ON'
 ],
-parentPlayBonus:50,
+parentPlayBonus:50,bookCatalog:[],
 brainExpPerTask:20,brainLevelExp:100,brainLevelGem:1,
 moonDiarySteps:[
 {title:'오늘 있었던 일',question:'오늘 나는 무엇을 했나요?',options:['📚 책을 읽었어요','🧮 공부를 했어요','🧩 어려운 문제를 풀었어요','🏫 학교에서 친구들과 지냈어요','🎨 만들기나 그림을 했어요','👨‍👩‍👧 가족과 즐겁게 보냈어요','✨ 새로운 일을 해봤어요']},
@@ -423,7 +423,7 @@ morningCheckQuestion:'오늘 아침, 내 마음과 몸은 어때요?',
 morningCheckOptions:['😊 기분 좋고 힘이 있어요','😌 편안하고 차분해요','😴 조금 피곤해요','😟 걱정되는 일이 있어요','😠 마음이 답답해요','🤗 오늘이 기대돼요'],
 moonDiaryFreePrompt:'오늘 하고 싶은 말을 한 줄로 적어도 좋아요.',moonDiaryRewardPoint:20,autoBackup:true,backupRetention:14,lastBackupDate:'',parentMemoPrompt:'오늘 아이가 즐거워한 점, 어려워한 점, 다음에 바꾸고 싶은 점을 기록해 주세요.',
 moonDiaryClosing:['오늘의 이야기를 차근차근 완성했구나. 정말 멋져!','네가 느낀 모든 마음은 소중해. 오늘도 잘했어!','오늘의 반짝이는 순간이 달빛일기에 저장됐어!'],
-morningHabits:['물 마시기|💧|2분','영양제·요거트 챙기기|🥛|3분','세수·양치하기|🪥|7분','옷 입기|👗|5분','읽을 책 챙기기|📚|2분','이불 정리하기|🛏️|3분','주변 정리하기|✨|3분'],afterHabits:['물병 정리하기|🧴|2분','연필 깎기|✏️|3분','가방 정리하기|🎒|5분','샤워하기|🛁|10분','옷을 빨래통에 넣기|🧺|2분'],eveningHabits:['주변 정리하기|✨|5분','내일 옷·준비물 챙기기|🗓️|5분','책가방 확인하기|🎒|3분','양치하기|🪥|5분','감사한 일 한 가지 떠올리기|💛|2분','취침 준비하기|🌙|5분'],missions:['기억 장면 그리기','새로운 단어 3개','가족에게 줄거리 이야기','기억 장면 한 줄','모르는 내용 질문하기','럭키 2배 미션','어려운 책 끝까지 읽기','오늘 많이 웃기','가족에게 고마운 점 말하기','보너스 50P'],missionPoint:50,missionApprovalRequired:true,additionalActivities:[['none','추가 활동 없음',0],['review','느낀점 쓰기',50],['quiz','책 퀴즈 만들기',50],['scene','기억 장면 그리기',50],['words','새로운 단어 3개',50],['family','가족에게 줄거리 이야기',50],['readline','기억에 남는 글 읽어주기',50]],morningMoodPrompt:'오늘 아침 기분은 어때?',eveningReflectionPrompt:'오늘 가장 반짝였던 순간은 무엇이었어?',gratitudePrompt:'오늘 고마웠던 일은 무엇이야?',tomorrowPrompt:'내일 해보고 싶은 것은 무엇이야?',closingMessages:['오늘도 정말 수고했어. 네가 해낸 모든 순간이 소중해.','오늘도 한 걸음 성장했어. 편안하게 쉬어도 괜찮아.','오늘의 반짝이는 순간을 기억하며 멋지게 마무리하자!'],rubyMessages:['오늘도 네가 빛나는 하루가 되길 응원해! ✨','천천히 해도 괜찮아. 나는 언제나 네 편이야.','끝까지 생각한 네 모습이 정말 멋져!','오늘도 한 걸음 성장했어. 내일은 더 멋진 모험이 기다리고 있어!','실수는 배우는 과정이야. 다시 시작한 네가 자랑스러워.'],bookCategories:[['normal','일반책',0],['readAloud','한글 음독',10],['leaf','잠수 나뭇잎책',300],['chapter','문고판',500]],shop:[['엄마와 10분 놀이',200,'🎲'],['원하는 책 1권',500,'📕'],['주말 간식 선택권',300,'🍰'],['공주 스티커',150,'👑'],['가족 영화 선택권',600,'🎬'],['특별 외출',1000,'🎡']]}};
+morningHabits:['물 마시기|💧|2분|건강 준비 영역|ON','영양제·요거트 챙기기|🥛|3분|건강 준비 영역|ON','세수·양치하기|🪥|7분|위생 영역|ON','옷 입기|👗|5분|등교 준비 영역|ON','읽을 책 챙기기|📚|2분|등교 준비 영역|ON','이불 정리하기|🛏️|3분|정리 영역|ON','주변 정리하기|✨|3분|정리 영역|ON'],afterHabits:['물병 정리하기|🧴|2분|하교 후 정리 영역|ON','연필 깎기|✏️|3분|학용품 영역|ON','가방 정리하기|🎒|5분|하교 후 정리 영역|ON','샤워하기|🛁|10분|위생 영역|ON','옷을 빨래통에 넣기|🧺|2분|정리 영역|ON'],eveningHabits:['주변 정리하기|✨|5분|정리 영역|ON','내일 옷·준비물 챙기기|🗓️|5분|내일 준비 영역|ON','책가방 확인하기|🎒|3분|내일 준비 영역|ON','양치하기|🪥|5분|위생 영역|ON','감사한 일 한 가지 떠올리기|💛|2분|마음 돌보기 영역|ON','취침 준비하기|🌙|5분|수면 준비 영역|ON'],missions:['기억 장면 그리기','새로운 단어 3개','가족에게 줄거리 이야기','기억 장면 한 줄','모르는 내용 질문하기','럭키 2배 미션','어려운 책 끝까지 읽기','오늘 많이 웃기','가족에게 고마운 점 말하기','보너스 50P'],missionPoint:50,missionApprovalRequired:true,additionalActivities:[['none','추가 활동 없음',0],['review','느낀점 쓰기',50],['quiz','책 퀴즈 만들기',50],['scene','기억 장면 그리기',50],['words','새로운 단어 3개',50],['family','가족에게 줄거리 이야기',50],['readline','기억에 남는 글 읽어주기',50]],morningMoodPrompt:'오늘 아침 기분은 어때?',eveningReflectionPrompt:'오늘 가장 반짝였던 순간은 무엇이었어?',gratitudePrompt:'오늘 고마웠던 일은 무엇이야?',tomorrowPrompt:'내일 해보고 싶은 것은 무엇이야?',closingMessages:['오늘도 정말 수고했어. 네가 해낸 모든 순간이 소중해.','오늘도 한 걸음 성장했어. 편안하게 쉬어도 괜찮아.','오늘의 반짝이는 순간을 기억하며 멋지게 마무리하자!'],rubyMessages:['오늘도 네가 빛나는 하루가 되길 응원해! ✨','천천히 해도 괜찮아. 나는 언제나 네 편이야.','끝까지 생각한 네 모습이 정말 멋져!','오늘도 한 걸음 성장했어. 내일은 더 멋진 모험이 기다리고 있어!','실수는 배우는 과정이야. 다시 시작한 네가 자랑스러워.'],bookCategories:[['normal','일반책',0],['readAloud','한글 음독',10],['leaf','잠수 나뭇잎책',300],['chapter','문고판',500]],shop:[['엄마와 10분 놀이',200,'🎲'],['원하는 책 1권',500,'📕'],['주말 간식 선택권',300,'🍰'],['공주 스티커',150,'👑'],['가족 영화 선택권',600,'🎬'],['특별 외출',1000,'🎡']]}};
 function storageGet(){try{return localStorage.getItem(KEY)||'{}'}catch(e){return '{}'}}
 function storageSet(value){try{localStorage.setItem(KEY,value);return true}catch(e){console.error('저장 실패',e);return false}}
 function storageRemove(){try{localStorage.removeItem(KEY)}catch(e){}}
@@ -447,6 +447,7 @@ if(!state.settings.parentPlayBrainCategoriesMigrated){
   storageSet(JSON.stringify(state));
 }
 if(!Number.isFinite(Number(state.settings.parentPlayBonus)))state.settings.parentPlayBonus=50;
+if(!Array.isArray(state.settings.bookCatalog))state.settings.bookCatalog=[];
 if(!state.brainDone||!Array.isArray(state.brainDone.items))state.brainDone={date:'',items:[],skipped:[],choice:null};
 if(!('choice' in state.brainDone))state.brainDone.choice=null;
 if(!Array.isArray(state.brainDone.skipped))state.brainDone.skipped=[];
@@ -492,6 +493,7 @@ function ensureDay(){
   return changed;
 }
 function parseRows(arr){return (arr||[]).map(x=>{const [name,icon='✨',time='']=(x||'').split('|');return{name,icon,time}}).filter(x=>x.name)}
+function parseHabitRows(arr){return (arr||[]).map((x,sourceIndex)=>{const [name,icon='✨',time='',domain='생활 영역',active='ON']=(x||'').split('|');return{name,icon,time,domain,active:String(active).toUpperCase()!=='OFF',sourceIndex}}).filter(x=>x.name)}
 function parseLearning(arr){return (arr||[]).map((x,sourceIndex)=>{const [name,icon='🧠',time='10분',domain='두뇌',active='ON']=(x||'').split('|');return{name,icon,time,domain,active:String(active).toUpperCase()!=='OFF',sourceIndex}}).filter(x=>x.name)}function addPoints(n,memo){state.points+=n;state.ledger.unshift({date:today(),amount:n,memo});save()}
 const navItems=[['home','🏠','홈'],['routine','📚','학습루틴'],['brain','💗','함께놀이'],['habits','🏠','생활루틴'],['reading','📚','독서'],['mission','🎴','특별미션'],['map','🗺️','세계관'],['album','📖','독서앨범'],['travel','📷','여행일기'],['bank','🏦','달빛은행'],['shop','🏪','포인트상점'],['stats','📈','통계'],['settings','⚙️','설정']];function buildNav(){nav.innerHTML=navItems.map(([id,i,l])=>`<button data-id="${id}" onclick="showScene('${id}')"><span>${i}</span>${l}</button>`).join('')}function showScene(id){document.querySelectorAll('.scene').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.id===id));if(id==='settings'){pinGate.style.display='block';settingsBody.style.display='none';pinInput.value=''}}
 function renderHome(){
@@ -502,14 +504,14 @@ function renderHome(){
   const parentPlayTotal=parentPlayList.length?1:0;
   const parentPlayDone=(state.brainDone.items||[]).length?1:0;
 
-  const morningList=parseRows(state.settings.morningHabits);
-  const afterList=parseRows(state.settings.afterHabits);
-  const eveningList=parseRows(state.settings.eveningHabits);
+  const morningList=parseHabitRows(state.settings.morningHabits).filter(x=>x.active);
+  const afterList=parseHabitRows(state.settings.afterHabits).filter(x=>x.active);
+  const eveningList=parseHabitRows(state.settings.eveningHabits).filter(x=>x.active);
   const habitTotal=morningList.length+afterList.length+eveningList.length;
   const habitDone=
-    (state.habitDone.morning.items||[]).filter(i=>i>=0&&i<morningList.length).length+
-    (state.habitDone.after.items||[]).filter(i=>i>=0&&i<afterList.length).length+
-    (state.habitDone.evening.items||[]).filter(i=>i>=0&&i<eveningList.length).length;
+    (state.habitDone.morning.items||[]).filter(i=>morningList.some(x=>x.sourceIndex===i)).length+
+    (state.habitDone.after.items||[]).filter(i=>afterList.some(x=>x.sourceIndex===i)).length+
+    (state.habitDone.evening.items||[]).filter(i=>eveningList.some(x=>x.sourceIndex===i)).length;
 
   const all=learningList.length+parentPlayTotal+habitTotal;
   const done=learningDone+parentPlayDone+habitDone;
@@ -558,49 +560,45 @@ function openRoutineResult(){const selected=parseLearning(state.settings.learnin
 function renderHabits(){
   const tabs=[['morning','🌞 아침'],['after','🏫 하교 후'],['evening','🌙 저녁']];
   habitPeriodTabs.innerHTML=tabs.map(([id,label])=>`<button class="${period===id?'active':''}" onclick="period='${id}';renderHabits()">${label}</button>`).join('');
-  const messages={morning:'아침 준비를 하나씩 끝내면 하루가 편안해져요.',after:'집에 돌아온 뒤 정리하면 내일이 쉬워져요.',evening:'오늘을 정리하고 편안하게 쉬어볼까요?'};
+  const messages={morning:'방학·학기 중에 맞춰 켜 둔 아침 습관만 보여요.',after:'오늘 필요한 하교 후 습관만 골라 실천해요.',evening:'저녁에 필요한 습관을 하나씩 편안하게 마무리해요.'};
   habitEncourage.textContent=messages[period];
   const key=period==='morning'?'morningHabits':period==='after'?'afterHabits':'eveningHabits';
-  const list=parseRows(state.settings[key]),bucket=state.habitDone[period],done=bucket.items;
-  const skipped=(bucket.skipped||[]).filter(i=>!done.includes(i)&&i>=0&&i<list.length);bucket.skipped=skipped;
-  const fresh=list.map((_,i)=>i).filter(i=>!done.includes(i)&&!skipped.includes(i));
-  const idx=fresh.length?fresh[0]:(skipped.length?skipped[0]:-1);
-  habitDoneCount.textContent=done.length+'개';habitEarned.textContent=(done.length*state.settings.routinePoint)+'P';habitSkippedCount.textContent=skipped.length+'개';
-  habitOverview.innerHTML=list.map((x,i)=>{const cls=done.includes(i)?'done':skipped.includes(i)?'skipped':i===idx?'current':'';const mark=done.includes(i)?'✓':skipped.includes(i)?'↺':i===idx?'●':'○';return `<div class="habit-chip ${cls}"><span>${mark}</span><span>${x.icon} ${esc(x.name)}</span></div>`}).join('');
-  habitDots.textContent=list.map((_,i)=>done.includes(i)?'●':skipped.includes(i)?'↺':i===idx?'◉':'○').join(' ');
-  if(idx<0){habitFocus.innerHTML=`<div class="focus-card" style="display:grid;place-items:center;text-align:center"><div><div class="focus-icon">🌟</div><h2>${tabs.find(x=>x[0]===period)[1]} 생활루틴을 모두 완료했어요!</h2><p>매일 반복한 작은 습관이 스스로 하는 힘이 돼요.</p></div></div><div class="habit-character-stage"><img class="habit-task-character" src="diana_running.png" alt="다이애나"></div>`;return;}
-  const x=list[idx],isRepeat=skipped.includes(idx);
-  habitFocus.innerHTML=`<div class="focus-card"><div class="habit-task-number">${idx+1} / ${list.length} ${isRepeat?'· 다시 하기':''}</div><h2 class="habit-task-title">${x.icon} ${esc(x.name)}</h2><div class="habit-task-meta">${esc(x.time)} · 매일 꼭 하는 생활습관 · +${state.settings.routinePoint}P</div>${isRepeat?'<div class="habit-repeat-note">아까 미뤄둔 일이에요. 오늘 안에 다시 해볼까요?</div>':''}<div class="focus-actions"><button class="btn pink" onclick="completeHabit(${idx})">완료했어요</button><button class="btn soft" onclick="skipHabit(${idx})">잠깐 미룰래요</button></div></div><div class="habit-character-stage"><img class="habit-task-character" src="diana_running.png" alt="다이애나"></div>`;
+  const list=parseHabitRows(state.settings[key]).filter(x=>x.active);
+  const bucket=state.habitDone[period];
+  const done=(bucket.items||[]).filter(i=>list.some(x=>x.sourceIndex===i));bucket.items=done;
+  const skipped=(bucket.skipped||[]).filter(i=>!done.includes(i)&&list.some(x=>x.sourceIndex===i));bucket.skipped=skipped;
+  const fresh=list.filter(x=>!done.includes(x.sourceIndex)&&!skipped.includes(x.sourceIndex));
+  const current=fresh[0]||(skipped.length?list.find(x=>x.sourceIndex===skipped[0]):null);
+  habitDoneCount.textContent=done.length+'개';
+  habitEarned.textContent=(done.length*state.settings.routinePoint)+'P';
+  habitSkippedCount.textContent=skipped.length+'개';
+  const groups={};list.forEach(x=>(groups[x.domain]||(groups[x.domain]=[])).push(x));
+  habitOverview.innerHTML=Object.entries(groups).map(([domain,items])=>`<div class="habit-category"><div class="habit-category-title">${esc(domain)}</div>${items.map(x=>{const i=x.sourceIndex,cls=done.includes(i)?'done':skipped.includes(i)?'skipped':current&&i===current.sourceIndex?'current':'',mark=done.includes(i)?'✓':skipped.includes(i)?'↺':current&&i===current.sourceIndex?'●':'○';return `<div class="habit-chip ${cls}"><span>${mark}</span><span>${x.icon} ${esc(x.name)}</span><em>${esc(x.time)}</em></div>`}).join('')}</div>`).join('');
+  habitDots.textContent=list.map(x=>done.includes(x.sourceIndex)?'●':skipped.includes(x.sourceIndex)?'↺':current&&x.sourceIndex===current.sourceIndex?'◉':'○').join(' ');
+  if(!list.length){habitFocus.innerHTML='<div class="focus-card" style="display:grid;place-items:center;text-align:center"><div><div class="focus-icon">🌿</div><h2>지금 켜 둔 생활루틴이 없어요.</h2><p>부모 설정에서 방학 또는 학기 중에 필요한 항목을 ON으로 켜 주세요.</p></div></div>';return;}
+  if(!current){habitFocus.innerHTML=`<div class="focus-card" style="display:grid;place-items:center;text-align:center"><div><div class="focus-icon">🌟</div><h2>${tabs.find(x=>x[0]===period)[1]} 생활루틴을 모두 완료했어요!</h2><p>오늘 선택한 습관을 스스로 마쳤어요.</p></div></div><div class="habit-character-stage"><img class="habit-task-character" src="diana_running.png" alt="다이애나"></div>`;return;}
+  const x=current,isRepeat=skipped.includes(x.sourceIndex);
+  habitFocus.innerHTML=`<div class="focus-card"><div class="habit-task-number">${list.findIndex(v=>v.sourceIndex===x.sourceIndex)+1} / ${list.length} ${isRepeat?'· 다시 하기':''}</div><h2 class="habit-task-title">${x.icon} ${esc(x.name)}</h2><div class="habit-task-meta">${esc(x.domain)} · ${esc(x.time)} · +${state.settings.routinePoint}P</div>${isRepeat?'<div class="habit-repeat-note">아까 미뤄둔 일이에요. 오늘 안에 다시 해볼까요?</div>':''}<div class="focus-actions"><button class="btn pink" onclick="completeHabit(${x.sourceIndex})">완료했어요</button><button class="btn soft" onclick="skipHabit(${x.sourceIndex})">잠깐 미룰래요</button></div></div><div class="habit-character-stage"><img class="habit-task-character" src="diana_idle.png" alt="생활루틴을 응원하는 다이애나"></div>`;
 }
 function completeHabit(i){i=Number(i);const bucket=state.habitDone[period];if(!bucket.items.includes(i)){bucket.items.push(i);bucket.skipped=(bucket.skipped||[]).filter(x=>x!==i);addPoints(state.settings.routinePoint,`${period} 생활루틴 완료`);playSound('success');sparkleBurst();toast('🌱 매일 하는 힘이 자라고 있어요!');}}
 function skipHabit(i){i=Number(i);const bucket=state.habitDone[period];if(bucket.items.includes(i))return;bucket.skipped=(bucket.skipped||[]).filter(x=>x!==i);bucket.skipped.push(i);save();toast('↺ 오늘 안에 다시 보여줄게요.');}
-function openHabitResult(){const total=['morning','after','evening'].reduce((sum,k)=>sum+parseRows(state.settings[k==='morning'?'morningHabits':k==='after'?'afterHabits':'eveningHabits']).length,0);const done=['morning','after','evening'].reduce((sum,k)=>sum+state.habitDone[k].items.length,0);openModal(`<h2>🏠 오늘의 생활루틴</h2><p>${done}/${total} 완료</p><p>생활습관은 매일 반복하며 스스로 하는 힘을 키워요.</p><button class="btn" onclick="closeModal()">확인</button>`);}
+function openHabitResult(){const total=['morning','after','evening'].reduce((sum,k)=>{const key=k==='morning'?'morningHabits':k==='after'?'afterHabits':'eveningHabits';return sum+parseHabitRows(state.settings[key]).filter(x=>x.active).length},0);const done=['morning','after','evening'].reduce((sum,k)=>{const key=k==='morning'?'morningHabits':k==='after'?'afterHabits':'eveningHabits',active=parseHabitRows(state.settings[key]).filter(x=>x.active);return sum+(state.habitDone[k].items||[]).filter(i=>active.some(x=>x.sourceIndex===i)).length},0);openModal(`<h2>🏠 오늘의 생활루틴</h2><p>${done}/${total} 완료</p><p>방학과 학기 중 일정에 맞게 필요한 습관만 켜서 사용할 수 있어요.</p><button class="btn" onclick="closeModal()">확인</button>`);}
 function renderAdditionalActivities(){const acts=state.settings.additionalActivities||[['none','추가 활동 없음',0]];bookActivity.innerHTML=acts.map(([id,name,points])=>`<option value="${esc(id)}">${esc(name)}${Number(points)?' +'+Number(points)+'P':''}</option>`).join('')}
 function renderBookCategories(){const cats=state.settings.bookCategories||[['normal','일반책',0]];bookType.innerHTML=cats.map(([id,name,bonus])=>`<option value="${esc(id)}">${esc(name)}${Number(bonus)?' +'+Number(bonus)+'P':''}</option>`).join('')}
+let pendingBookCover='';let selectedCatalogBook=null;
+function normalizeBookCatalogItem(raw){const get=(...keys)=>{for(const k of keys){if(raw&&raw[k]!==undefined&&raw[k]!==null&&String(raw[k]).trim())return String(raw[k]).trim()}return ''};return{title:get('title','제목','도서명','bookTitle','TITLE'),author:get('author','저자','작가','AUTHOR'),publisher:get('publisher','출판사','발행처','PUBLISHER'),isbn:get('isbn','ISBN','isbn13','ISBN13'),cover:get('cover','표지','coverUrl','image','이미지')}}
+function parseSimpleCSV(text){const rows=[];let row=[],cell='',quoted=false;for(let i=0;i<text.length;i++){const ch=text[i],next=text[i+1];if(ch==='"'){if(quoted&&next==='"'){cell+='"';i++}else quoted=!quoted}else if(ch===','&&!quoted){row.push(cell);cell=''}else if((ch==='\n'||ch==='\r')&&!quoted){if(ch==='\r'&&next==='\n')i++;row.push(cell);cell='';if(row.some(v=>String(v).trim()))rows.push(row);row=[]}else cell+=ch}row.push(cell);if(row.some(v=>String(v).trim()))rows.push(row);if(rows.length<2)return[];const headers=rows[0].map(x=>String(x).trim().replace(/^\uFEFF/,''));return rows.slice(1).map(r=>Object.fromEntries(headers.map((h,i)=>[h,r[i]||''])))}
+async function importBookCatalog(event){const file=event.target.files?.[0];if(!file)return;try{const text=await file.text();let raw;if(file.name.toLowerCase().endsWith('.json')){raw=JSON.parse(text);if(!Array.isArray(raw))raw=raw.books||raw.items||raw.data||[]}else raw=parseSimpleCSV(text);const normalized=(raw||[]).map(normalizeBookCatalogItem).filter(x=>x.title),merged=[...(state.settings.bookCatalog||[]),...normalized],seen=new Set();state.settings.bookCatalog=merged.filter(x=>{const key=(x.isbn||x.title+'|'+x.author).toLowerCase();if(seen.has(key))return false;seen.add(key);return true}).slice(0,10000);storageSet(JSON.stringify(state));const status=document.getElementById('bookCatalogStatus');if(status)status.textContent=state.settings.bookCatalog.length.toLocaleString()+'권 저장됨';event.target.value='';toast(`📚 도서 목록 ${normalized.length.toLocaleString()}권을 불러왔어요.`)}catch(e){console.error(e);toast('목록을 읽지 못했어요. CSV 또는 JSON 형식을 확인해 주세요.')}}
+function clearBookCatalog(){if(!confirm('저장한 도서 목록을 모두 비울까요?'))return;state.settings.bookCatalog=[];save();renderSettings();toast('도서 목록을 비웠어요.')}
+function searchLocalBookCatalog(){const q=(document.getElementById('bookTitle')?.value||'').trim().toLowerCase(),box=document.getElementById('bookSearchResults');if(!box)return;selectedCatalogBook=null;if(!q){box.innerHTML='';box.classList.remove('open');return}const results=(state.settings.bookCatalog||[]).filter(b=>String(b.title||'').toLowerCase().includes(q)||String(b.author||'').toLowerCase().includes(q)||String(b.isbn||'').includes(q)).slice(0,8);window.__bookSearchResults=results;box.innerHTML=results.length?results.map((b,i)=>`<button type="button" onclick="chooseCatalogBook(${i})">${b.cover?`<img src="${escAttr(b.cover)}" alt="">`:'<span class="mini-book-placeholder">📘</span>'}<span><b>${esc(b.title)}</b><small>${esc(b.author||'저자 정보 없음')}${b.publisher?' · '+esc(b.publisher):''}</small></span></button>`).join(''):'<div class="book-search-empty">목록에 없어요. 제목을 직접 입력해도 됩니다.</div>';box.classList.add('open')}
+function chooseCatalogBook(index){const b=(window.__bookSearchResults||[])[Number(index)];if(!b)return;selectedCatalogBook=b;bookTitle.value=b.title||'';const a=document.getElementById('bookAuthor');if(a)a.value=b.author||'';pendingBookCover=b.cover||'';renderBookCoverPreview();const box=document.getElementById('bookSearchResults');if(box){box.innerHTML='';box.classList.remove('open')}}
+function handleBookCover(event){const file=event.target.files?.[0];if(!file)return;compressTravelImage(file).then(data=>{pendingBookCover=data;renderBookCoverPreview();event.target.value=''}).catch(()=>toast('표지 사진을 읽지 못했어요.'))}
+function renderBookCoverPreview(){const el=document.getElementById('bookCoverPreview');if(!el)return;el.innerHTML=pendingBookCover?`<img src="${pendingBookCover}" alt="책 표지 미리보기"><button type="button" onclick="pendingBookCover='';renderBookCoverPreview()">×</button>`:''}
+function makeBookPlaceholder(title,lang){return `<div class="shelf-book-placeholder ${lang==='영어'?'english':''}"><span>${lang==='영어'?'ABC':'가'}</span><b>${esc(title||'책')}</b></div>`}
+
 function flyReadingGem(lang){const start=document.querySelector('.reading-record-panel .btn'),target=document.getElementById('gemCount');if(!start||!target)return;const s=start.getBoundingClientRect(),t=target.getBoundingClientRect(),book=document.createElement('div');book.className='flying-book-gem';book.innerHTML=lang==='한글'?'📕<span>💎</span>':'📘<span>💎</span>';book.style.left=(s.left+s.width/2)+'px';book.style.top=(s.top+s.height/2)+'px';book.style.setProperty('--gem-x',(t.left-s.left)+'px');book.style.setProperty('--gem-y',(t.top-s.top)+'px');document.body.appendChild(book);setTimeout(()=>book.remove(),1100);}
-function addBook(){const t=bookTitle.value.trim();if(!t)return toast('책 제목을 입력해 주세요.');const lang=bookLang.value,type=bookType.value,activityId=bookActivity.value,activity=(state.settings.additionalActivities||[]).find(x=>x[0]===activityId)||['none','추가 활동 없음',0],extra=Number(activity[2])||0,cat=(state.settings.bookCategories||[]).find(x=>x[0]===type)||['normal','일반책',0],bonus=Number(cat[2])||0,total=state.settings.bookPoint+bonus+extra;state.books.unshift({title:t,lang,type,typeName:cat[1],activityName:activity[1],date:today(),points:total,gems:1});state.gems=Number(state.gems||0)+1;flyReadingGem(lang);playSound('magic');addPoints(total,`${lang}책 기록 · ${cat[1]} · 보석 1개`);bookTitle.value='';toast(`${lang==='한글'?'📕 한글책':'📘 영어책'} 기록! +${total}P · 💎1`);}
-function exchangeGems(){if(state.gems<state.settings.gemGoal)return toast(`보석이 ${state.settings.gemGoal}개 필요해요.`);state.gems-=state.settings.gemGoal;addPoints(state.settings.gemExchange,'독서 보석 교환');toast('💎 포인트로 교환했어요!')}function renderBooks(){
-  gemCount.textContent=state.gems;
-  gemRuleText.textContent=`보석 ${state.settings.gemGoal}개 → ${state.settings.gemExchange}P`;
-
-  const koCount=state.books.filter(b=>b.lang==='한글').length;
-  const enCount=state.books.filter(b=>b.lang==='영어').length;
-  koreanBookCount.textContent=koCount+'권';
-  englishBookCount.textContent=enCount+'권';
-
-  const h=state.books.length
-    ? state.books.map(b=>{
-        const isKo=b.lang==='한글';
-        const badge=isKo
-          ? '<span class="lang-book-badge ko" title="한글책">가</span>'
-          : '<span class="lang-book-badge en" title="영어책">ABC</span>';
-        return `<div class="row">${badge}<div class="grow"><b>${esc(b.title)}</b><br><small>${b.date} · ${esc(b.typeName||b.type||'일반책')}${b.activityName&&b.activityName!=='추가 활동 없음'?' · '+esc(b.activityName):''}</small></div><b>+${b.points}P</b></div>`;
-      }).join('')
-    : '<p>아직 기록한 책이 없어요.</p>';
-
-  bookList.innerHTML=h;
-  albumList.innerHTML=h;
-}
+function addBook(){const t=bookTitle.value.trim();if(!t)return toast('책 제목을 입력해 주세요.');const author=(document.getElementById('bookAuthor')?.value||'').trim(),lang=bookLang.value,type=bookType.value,activityId=bookActivity.value,activity=(state.settings.additionalActivities||[]).find(x=>x[0]===activityId)||['none','추가 활동 없음',0],extra=Number(activity[2])||0,cat=(state.settings.bookCategories||[]).find(x=>x[0]===type)||['normal','일반책',0],bonus=Number(cat[2])||0,total=state.settings.bookPoint+bonus+extra;state.books.unshift({title:t,author,cover:pendingBookCover||selectedCatalogBook?.cover||'',isbn:selectedCatalogBook?.isbn||'',publisher:selectedCatalogBook?.publisher||'',lang,type,typeName:cat[1],activityName:activity[1],date:today(),points:total,gems:1});state.gems=Number(state.gems||0)+1;pendingBookCover='';selectedCatalogBook=null;flyReadingGem(lang);playSound('magic');addPoints(total,`${lang}책 기록 · ${cat[1]} · 보석 1개`);bookTitle.value='';const a=document.getElementById('bookAuthor');if(a)a.value='';renderBookCoverPreview();toast(`${lang==='한글'?'📕 한글책':'📘 영어책'} 기록! +${total}P · 💎1`);}
+function exchangeGems(){if(state.gems<state.settings.gemGoal)return toast(`보석이 ${state.settings.gemGoal}개 필요해요.`);state.gems-=state.settings.gemGoal;addPoints(state.settings.gemExchange,'독서 보석 교환');toast('💎 포인트로 교환했어요!')}function renderBooks(){gemCount.textContent=state.gems;gemRuleText.textContent=`보석 ${state.settings.gemGoal}개 → ${state.settings.gemExchange}P`;const koCount=state.books.filter(b=>b.lang==='한글').length,enCount=state.books.filter(b=>b.lang==='영어').length,totalPoints=state.books.reduce((sum,b)=>sum+(Number(b.points)||0),0);koreanBookCount.textContent=koCount+'권';englishBookCount.textContent=enCount+'권';const totalEl=document.getElementById('albumBookTotal'),pointEl=document.getElementById('albumPointTotal');if(totalEl)totalEl.textContent=state.books.length+'권';if(pointEl)pointEl.textContent=totalPoints.toLocaleString()+'P 적립';bookList.innerHTML=state.books.length?state.books.slice(0,30).map(b=>{const cover=b.cover?`<img src="${b.cover}" alt="${escAttr(b.title)} 표지">`:makeBookPlaceholder(b.title,b.lang);return `<div class="reading-book-row"><div class="reading-cover-mini">${cover}</div><div class="grow"><b>${esc(b.title)}</b>${b.author?`<small>${esc(b.author)}</small>`:''}<small>${b.date} · ${esc(b.typeName||'일반책')}</small></div><strong>+${Number(b.points)||0}P</strong></div>`}).join(''):'<p>아직 기록한 책이 없어요.</p>';albumList.innerHTML=state.books.length?state.books.map(b=>{const cover=b.cover?`<img src="${b.cover}" alt="${escAttr(b.title)} 표지">`:makeBookPlaceholder(b.title,b.lang);return `<article class="shelf-book-card"><div class="shelf-book-cover">${cover}</div><h3>${esc(b.title)}</h3>${b.author?`<p>${esc(b.author)}</p>`:''}<small>${b.date} · +${Number(b.points)||0}P</small></article>`}).join(''):'<div class="empty-book-shelf">책을 기록하면 표지가 책장에 한 권씩 꽂혀요.</div>';renderBookCoverPreview();}
 function renderMission(){
   const missions=Array.isArray(state.settings.missions)?state.settings.missions.slice(0,10):[];
   missionCards.innerHTML=missions.map((m,i)=>{
@@ -1445,7 +1443,7 @@ const settingDefs=[['approvalSet','🔐 승인센터'],['basic','⚙️ 기본 �
       ${reviewedShop.length?'<button class="btn soft" onclick="clearReviewedShopRequests()">처리 기록 정리</button>':''}
     </div>`;
 }
-if(settingTab==='basic')h=`<div class="setting-section"><h3>앱 기본</h3><div class="form"><label>앱 제목<input id="sTitle" value="${esc(s.appTitle)}"></label><label>부제<input id="sSub" value="${esc(s.appSubtitle)}"></label><label>부모 PIN<input id="sPin" value="${esc(s.pin)}" maxlength="4"></label><label>오늘의 서프라이즈 포인트<input id="sSurprise" type="number" value="${s.surprisePoint}"></label><label class="switch">효과음 <input id="sSound" type="checkbox" ${s.sound?'checked':''}></label><label class="switch">배경음 <input id="sBgm" type="checkbox" ${s.bgm?'checked':''}></label></div></div><div class="setting-section"><h3>🦄 루비의 매일 한마디</h3><p class="smallnote">한 줄에 한 문장씩 입력하면 날짜에 따라 매일 바뀝니다.</p><textarea id="sRubyMessages" style="width:100%;min-height:150px">${(s.rubyMessages||[]).join('\n')}</textarea></div><div class="setting-section"><h3>☀️ 오전 마음 체크</h3><label>질문<input id="sMorningCheckQuestion" value="${esc(s.morningCheckQuestion||'')}"></label><p class="smallnote">답변을 한 줄에 하나씩 입력하세요.</p><textarea id="sMorningCheckOptions" style="width:100%;min-height:150px">${(s.morningCheckOptions||[]).join('\n')}</textarea></div><button class="btn" onclick="saveBasic()">기본 설정 저장</button>`;if(settingTab==='routineSet')h=`<div class="setting-section"><h3>📚 선택형 학습루틴 10개</h3><p class="smallnote">각 활동의 ON/OFF를 스위치로 선택하고 이름·아이콘·시간·영역도 수정할 수 있어요.</p><div class="routine-editor-head"><span>사용</span><span>아이콘</span><span>활동명</span><span>시간</span><span>영역</span></div><div id="learningEditor" class="routine-editor"></div></div><div class="setting-section"><h3>💗 부모와 함께하는 놀이 10개</h3><p class="smallnote">기본 애착놀이와 두뇌놀이가 함께 들어 있습니다. 그림·음악·처리속도·작업기억·시지각·추론 등 영역명을 옆 칸에서 자유롭게 수정할 수 있고, 저장 시 시간은 모두 10분으로 맞춰집니다.</p><div class="routine-editor-head"><span>사용</span><span>아이콘</span><span>활동명</span><span>시간</span><span>놀이·두뇌 영역</span></div><div id="brainEditor" class="routine-editor"></div><div class="editor-grid"><label>함께놀이 특별 보너스<input id="sParentPlayBonus" type="number" value="${s.parentPlayBonus||50}"></label></div></div><div class="setting-section"><h3>🏠 필수 생활루틴</h3><div class="editor-grid"><label>🌞 아침<textarea id="sMorningHabits">${s.morningHabits.join('\n')}</textarea></label><label>🏫 하교 후<textarea id="sAfterHabits">${s.afterHabits.join('\n')}</textarea></label><label>🌙 저녁<textarea id="sEveningHabits">${s.eveningHabits.join('\n')}</textarea></label></div><label>완료 1개 포인트<input id="sRoutinePoint" type="number" value="${s.routinePoint}"></label></div><button class="btn" onclick="saveRoutineSettings()">루틴 저장</button>`;if(settingTab==='readingSet')h=`<div class="setting-section"><h3>독서·포인트 규칙</h3><div class="editor-grid"><label>책 1권 포인트<input id="sBookPoint" type="number" value="${s.bookPoint}"></label><label>추가활동 포인트<input id="sActivityPoint" type="number" value="${s.activityPoint}"></label><label>보석 교환 필요 개수<input id="sGemGoal" type="number" value="${s.gemGoal}"></label><label>보석 교환 포인트<input id="sGemExchange" type="number" value="${s.gemExchange}"></label><label>한글책 목표<input id="sKoGoal" type="number" value="${s.koGoal}"></label><label>영어책 목표<input id="sEnGoal" type="number" value="${s.enGoal}"></label><label>세계관 지역 개방 간격<input id="sWorldStep" type="number" value="${s.worldStep||100}"></label></div><p class="smallnote">기본값 100권: 100·200·300·400·500·600·700·800·900·1,000권에 총 10개 지역이 열립니다.</p></div><div class="setting-section"><h3>📚 책 분류와 보너스 포인트</h3><p class="smallnote">한 줄에 분류명|추가포인트 형식으로 입력하세요. 예: 한글 음독|10</p><textarea id="sBookCategories" style="width:100%;min-height:150px">${(s.bookCategories||[]).map(x=>x[1]+'|'+x[2]).join('\n')}</textarea></div><div class="setting-section"><h3>✨ 독서 추가 활동</h3><div class="activity-editor-note">한 줄에 활동명|포인트 형식으로 입력하세요. 첫 줄은 ‘추가 활동 없음|0’을 권장합니다.</div><textarea id="sAdditionalActivities" style="width:100%;min-height:190px;margin-top:8px">${(s.additionalActivities||[]).map(x=>x[1]+'|'+x[2]).join('\n')}</textarea></div><button class="btn" onclick="saveReadingSettings()">독서 설정 저장</button>`;if(settingTab==='missionSet')h=`<div class="setting-section"><h3>카드 10장</h3><p class="smallnote">한 줄에 카드 하나씩 입력하세요.</p><textarea id="sMissions" style="width:100%;min-height:260px">${s.missions.join('\n')}</textarea><label>완료 포인트<input id="sMissionPoint" type="number" value="${s.missionPoint}"></label><label class="setting-check"><span><b>부모 승인 필요</b><br><small>끄면 아이가 완료 버튼을 누르는 즉시 포인트가 지급됩니다.</small></span><input id="sMissionApproval" type="checkbox" ${s.missionApprovalRequired?'checked':''}></label></div><button class="btn" onclick="saveMissionSettings()">특별미션 저장</button> <button class="btn soft" onclick="resetMissionToday()">오늘 선택 초기화</button>`;if(settingTab==='shopSet')h=`<div class="setting-section"><h3>상점 상품</h3><p class="smallnote">한 줄에 상품명|가격|아이콘 형식입니다.</p><textarea id="sShop" style="width:100%;min-height:260px">${s.shop.map(x=>x.join('|')).join('\n')}</textarea></div><button class="btn" onclick="saveShopSettings()">상점 저장</button>`;if(settingTab==='diarySet')h=`<div class="setting-section"><h3>🌙 체크형 달빛일기</h3><p class="smallnote">아이에게는 질문마다 체크형 답안으로 보입니다. 형식: 제목||질문||선택지1|선택지2|선택지3</p><textarea id="sMoonDiarySteps" style="width:100%;min-height:300px">${(s.moonDiarySteps||[]).map(x=>x.title+'||'+x.question+'||'+(x.options||[]).join('|')).join('\n')}</textarea><label>자유 한 줄 안내문<input id="sMoonDiaryFreePrompt" value="${esc(s.moonDiaryFreePrompt||'')}"></label><label>완성 보상 포인트<input id="sMoonDiaryReward" type="number" value="${s.moonDiaryRewardPoint||0}"></label><p class="smallnote">마무리 문구를 한 줄에 하나씩 입력하세요.</p><textarea id="sMoonDiaryClosing" style="width:100%;min-height:120px">${(s.moonDiaryClosing||[]).join('\n')}</textarea></div><button class="btn" onclick="saveDiarySettings()">달빛일기 저장</button>`;if(settingTab==='dataSet')h=`<div class="backup-center-hero">
+if(settingTab==='basic')h=`<div class="setting-section"><h3>앱 기본</h3><div class="form"><label>앱 제목<input id="sTitle" value="${esc(s.appTitle)}"></label><label>부제<input id="sSub" value="${esc(s.appSubtitle)}"></label><label>부모 PIN<input id="sPin" value="${esc(s.pin)}" maxlength="4"></label><label>오늘의 서프라이즈 포인트<input id="sSurprise" type="number" value="${s.surprisePoint}"></label><label class="switch">효과음 <input id="sSound" type="checkbox" ${s.sound?'checked':''}></label><label class="switch">배경음 <input id="sBgm" type="checkbox" ${s.bgm?'checked':''}></label></div></div><div class="setting-section"><h3>🦄 루비의 매일 한마디</h3><p class="smallnote">한 줄에 한 문장씩 입력하면 날짜에 따라 매일 바뀝니다.</p><textarea id="sRubyMessages" style="width:100%;min-height:150px">${(s.rubyMessages||[]).join('\n')}</textarea></div><div class="setting-section"><h3>☀️ 오전 마음 체크</h3><label>질문<input id="sMorningCheckQuestion" value="${esc(s.morningCheckQuestion||'')}"></label><p class="smallnote">답변을 한 줄에 하나씩 입력하세요.</p><textarea id="sMorningCheckOptions" style="width:100%;min-height:150px">${(s.morningCheckOptions||[]).join('\n')}</textarea></div><button class="btn" onclick="saveBasic()">기본 설정 저장</button>`;if(settingTab==='routineSet')h=`<div class="setting-section"><h3>📚 선택형 학습루틴 10개</h3><p class="smallnote">각 활동의 ON/OFF를 스위치로 선택하고 이름·아이콘·시간·영역도 수정할 수 있어요.</p><div class="routine-editor-head"><span>사용</span><span>아이콘</span><span>활동명</span><span>시간</span><span>영역</span></div><div id="learningEditor" class="routine-editor"></div></div><div class="setting-section"><h3>💗 부모와 함께하는 놀이 10개</h3><p class="smallnote">기본 애착놀이와 두뇌놀이가 함께 들어 있습니다. 그림·음악·처리속도·작업기억·시지각·추론 등 영역명을 옆 칸에서 자유롭게 수정할 수 있고, 저장 시 시간은 모두 10분으로 맞춰집니다.</p><div class="routine-editor-head"><span>사용</span><span>아이콘</span><span>활동명</span><span>시간</span><span>놀이·두뇌 영역</span></div><div id="brainEditor" class="routine-editor"></div><div class="editor-grid"><label>함께놀이 특별 보너스<input id="sParentPlayBonus" type="number" value="${s.parentPlayBonus||50}"></label></div></div><div class="setting-section"><h3>🏠 선택형 생활루틴</h3><p class="smallnote">방학과 학기 중에 필요한 항목이 다르면 ON/OFF만 바꿔 사용하세요. 이름·아이콘·시간·영역도 수정할 수 있어요.</p><h4>🌞 아침</h4><div class="routine-editor-head"><span>사용</span><span>아이콘</span><span>활동명</span><span>시간</span><span>영역</span></div><div id="morningHabitEditor" class="routine-editor"></div><h4>🏫 하교 후</h4><div class="routine-editor-head"><span>사용</span><span>아이콘</span><span>활동명</span><span>시간</span><span>영역</span></div><div id="afterHabitEditor" class="routine-editor"></div><h4>🌙 저녁</h4><div class="routine-editor-head"><span>사용</span><span>아이콘</span><span>활동명</span><span>시간</span><span>영역</span></div><div id="eveningHabitEditor" class="routine-editor"></div><label>완료 1개 포인트<input id="sRoutinePoint" type="number" value="${s.routinePoint}"></label></div><button class="btn" onclick="saveRoutineSettings()">루틴 저장</button>`;if(settingTab==='readingSet')h=`<div class="setting-section"><h3>독서·포인트 규칙</h3><div class="editor-grid"><label>책 1권 포인트<input id="sBookPoint" type="number" value="${s.bookPoint}"></label><label>추가활동 포인트<input id="sActivityPoint" type="number" value="${s.activityPoint}"></label><label>보석 교환 필요 개수<input id="sGemGoal" type="number" value="${s.gemGoal}"></label><label>보석 교환 포인트<input id="sGemExchange" type="number" value="${s.gemExchange}"></label><label>한글책 목표<input id="sKoGoal" type="number" value="${s.koGoal}"></label><label>영어책 목표<input id="sEnGoal" type="number" value="${s.enGoal}"></label><label>세계관 지역 개방 간격<input id="sWorldStep" type="number" value="${s.worldStep||100}"></label></div><p class="smallnote">기본값 100권: 100·200·300·400·500·600·700·800·900·1,000권에 총 10개 지역이 열립니다.</p></div><div class="setting-section"><h3>📚 책 분류와 보너스 포인트</h3><p class="smallnote">한 줄에 분류명|추가포인트 형식으로 입력하세요. 예: 한글 음독|10</p><textarea id="sBookCategories" style="width:100%;min-height:150px">${(s.bookCategories||[]).map(x=>x[1]+'|'+x[2]).join('\n')}</textarea></div><div class="setting-section"><h3>✨ 독서 추가 활동</h3><div class="activity-editor-note">한 줄에 활동명|포인트 형식으로 입력하세요. 첫 줄은 ‘추가 활동 없음|0’을 권장합니다.</div><textarea id="sAdditionalActivities" style="width:100%;min-height:190px;margin-top:8px">${(s.additionalActivities||[]).map(x=>x[1]+'|'+x[2]).join('\n')}</textarea></div><div class="setting-section"><h3>📚 우리 도서관 책 목록</h3><p class="smallnote">도서관에서 내려받은 CSV 또는 JSON 파일을 불러오면 제목·저자·ISBN으로 검색할 수 있어요. 권장 열 이름: 제목/title, 저자/author, 출판사/publisher, ISBN/isbn, 표지/cover.</p><label class="catalog-import-label">CSV·JSON 목록 불러오기<input id="bookCatalogFile" type="file" accept=".csv,.json,text/csv,application/json" onchange="importBookCatalog(event)"></label><div id="bookCatalogStatus" class="catalog-status">${(s.bookCatalog||[]).length.toLocaleString()}권 저장됨</div><button class="btn soft" type="button" onclick="clearBookCatalog()">도서 목록 비우기</button></div><button class="btn" onclick="saveReadingSettings()">독서 설정 저장</button>`;if(settingTab==='missionSet')h=`<div class="setting-section"><h3>카드 10장</h3><p class="smallnote">한 줄에 카드 하나씩 입력하세요.</p><textarea id="sMissions" style="width:100%;min-height:260px">${s.missions.join('\n')}</textarea><label>완료 포인트<input id="sMissionPoint" type="number" value="${s.missionPoint}"></label><label class="setting-check"><span><b>부모 승인 필요</b><br><small>끄면 아이가 완료 버튼을 누르는 즉시 포인트가 지급됩니다.</small></span><input id="sMissionApproval" type="checkbox" ${s.missionApprovalRequired?'checked':''}></label></div><button class="btn" onclick="saveMissionSettings()">특별미션 저장</button> <button class="btn soft" onclick="resetMissionToday()">오늘 선택 초기화</button>`;if(settingTab==='shopSet')h=`<div class="setting-section"><h3>상점 상품</h3><p class="smallnote">한 줄에 상품명|가격|아이콘 형식입니다.</p><textarea id="sShop" style="width:100%;min-height:260px">${s.shop.map(x=>x.join('|')).join('\n')}</textarea></div><button class="btn" onclick="saveShopSettings()">상점 저장</button>`;if(settingTab==='diarySet')h=`<div class="setting-section"><h3>🌙 체크형 달빛일기</h3><p class="smallnote">아이에게는 질문마다 체크형 답안으로 보입니다. 형식: 제목||질문||선택지1|선택지2|선택지3</p><textarea id="sMoonDiarySteps" style="width:100%;min-height:300px">${(s.moonDiarySteps||[]).map(x=>x.title+'||'+x.question+'||'+(x.options||[]).join('|')).join('\n')}</textarea><label>자유 한 줄 안내문<input id="sMoonDiaryFreePrompt" value="${esc(s.moonDiaryFreePrompt||'')}"></label><label>완성 보상 포인트<input id="sMoonDiaryReward" type="number" value="${s.moonDiaryRewardPoint||0}"></label><p class="smallnote">마무리 문구를 한 줄에 하나씩 입력하세요.</p><textarea id="sMoonDiaryClosing" style="width:100%;min-height:120px">${(s.moonDiaryClosing||[]).join('\n')}</textarea></div><button class="btn" onclick="saveDiarySettings()">달빛일기 저장</button>`;if(settingTab==='dataSet')h=`<div class="backup-center-hero">
   <div class="backup-orb">💾</div>
   <div><h2>엄마 전용 백업센터</h2><p>아이의 독서·루틴·달빛일기·포인트·설정을 안전하게 보관해요.</p></div>
 </div>
@@ -1524,30 +1522,9 @@ if(settingTab==='dataSet'){
     memoBtn.onclick=function(e){e.preventDefault();saveParentMemo();};
   }
 }
-if(settingTab==='routineSet'){routineEditorRows('learningEditor',s.learning,'learning');routineEditorRows('brainEditor',s.brainRoutine,'brain')}}
+if(settingTab==='routineSet'){routineEditorRows('learningEditor',s.learning,'learning');routineEditorRows('brainEditor',s.brainRoutine,'brain');routineEditorRows('morningHabitEditor',s.morningHabits,'morning');routineEditorRows('afterHabitEditor',s.afterHabits,'after');routineEditorRows('eveningHabitEditor',s.eveningHabits,'evening')}}
 function esc(x){return String(x).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;')}function lines(id){return document.getElementById(id).value.split(/\n/).map(x=>x.trim()).filter(Boolean)}function saveBasic(){Object.assign(state.settings,{appTitle:sTitle.value.trim(),appSubtitle:sSub.value.trim(),pin:sPin.value.trim()||state.settings.pin,surprisePoint:+sSurprise.value||20,sound:sSound.checked,bgm:sBgm.checked,rubyMessages:lines('sRubyMessages'),morningCheckQuestion:sMorningCheckQuestion.value.trim(),morningCheckOptions:lines('sMorningCheckOptions')});save();toast('기본 설정을 저장했어요.')}
-function saveRoutineSettings(){
-  const parentPlay=collectRoutineEditor('brainEditor').map(line=>{
-    const p=line.split('|');
-    p[2]='10분';
-    return p.join('|');
-  });
-  if(!parentPlay.some(line=>line.endsWith('|ON'))){
-    toast('부모와 함께하는 놀이는 최소 한 가지를 ON으로 켜 주세요.');
-    return;
-  }
-  Object.assign(state.settings,{
-    learning:collectRoutineEditor('learningEditor'),
-    brainRoutine:parentPlay,
-    parentPlayBonus:+document.getElementById('sParentPlayBonus').value||50,
-    morningHabits:lines('sMorningHabits'),
-    afterHabits:lines('sAfterHabits'),
-    eveningHabits:lines('sEveningHabits'),
-    routinePoint:+sRoutinePoint.value||10
-  });
-  save();
-  toast('학습·함께놀이·생활루틴 설정을 저장했어요.');
-}
+function saveRoutineSettings(){const parentPlay=collectRoutineEditor('brainEditor').map(line=>{const p=line.split('|');p[2]='10분';return p.join('|')});if(!parentPlay.some(line=>line.endsWith('|ON'))){toast('부모와 함께하는 놀이는 최소 한 가지를 ON으로 켜 주세요.');return}Object.assign(state.settings,{learning:collectRoutineEditor('learningEditor'),brainRoutine:parentPlay,parentPlayBonus:+document.getElementById('sParentPlayBonus').value||50,morningHabits:collectRoutineEditor('morningHabitEditor'),afterHabits:collectRoutineEditor('afterHabitEditor'),eveningHabits:collectRoutineEditor('eveningHabitEditor'),routinePoint:+document.getElementById('sRoutinePoint').value||10});save();toast('학습·함께놀이·선택형 생활루틴 설정을 저장했어요.')}
 function saveReadingSettings(){Object.assign(state.settings,{bookPoint:+sBookPoint.value||10,activityPoint:+sActivityPoint.value||50,gemGoal:+sGemGoal.value||10,gemExchange:+sGemExchange.value||120,koGoal:+sKoGoal.value||1000,enGoal:+sEnGoal.value||1000,worldStep:+sWorldStep.value||100,bookCategories:lines('sBookCategories').map((line,i)=>{const parts=line.split('|');const name=(parts[0]||'분류').trim(),bonus=Number(parts[1])||0;return['cat'+i,name,bonus]}),additionalActivities:lines('sAdditionalActivities').map((line,i)=>{const parts=line.split('|');const name=(parts[0]||'활동').trim(),points=Number(parts[1])||0;return['act'+i,name,points]})});save();toast('독서 설정을 저장했어요.')}function saveDiarySettings(){
   const steps=lines('sMoonDiarySteps').map(line=>{const p=line.split('||');return{title:(p[0]||'단계').trim(),question:(p[1]||'골라 주세요').trim(),options:(p[2]||'').split('|').map(x=>x.trim()).filter(Boolean)}}).filter(x=>x.options.length);
   state.settings.moonDiarySteps=steps;state.settings.moonDiaryFreePrompt=sMoonDiaryFreePrompt.value.trim();state.settings.moonDiaryRewardPoint=+sMoonDiaryReward.value||0;state.settings.moonDiaryClosing=lines('sMoonDiaryClosing');save();toast('달빛일기 설정을 저장했어요.');
@@ -1722,7 +1699,7 @@ function saveBackupSettings(){
   refreshBackupCenter();
 }
 function exportData(){
-  const payload={app:'PROJECT LUNA',version:'2.4.0-home-routine-progress-fix',exportedAt:new Date().toISOString(),data:state};
+  const payload={app:'PROJECT LUNA',version:'2.5.0-flex-habits-photo-bookshelf-catalog',exportedAt:new Date().toISOString(),data:state};
   const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
   const a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
@@ -1760,7 +1737,7 @@ function renderAll(){ensureDay();safeRender('book categories',renderBookCategori
 Object.assign(window,{
   openMorningCheck,saveMorningCheck,openMoonDiary,selectMoonDiaryAnswer,moonDiaryNext,chooseMoonDiaryOption,moonDiaryBack,restartMoonDiary,saveMoonDiary,saveSimpleMoonDiary,openMorningMood,openDayReflection,saveMorningMood,saveDayReflection,
   chooseMission,completeMissionRequest,approveMission,approveMissionFromSettings,completeHabit,skipHabit,skipRoutine,startLearningTimer,selectParentPlay,openParentPlayPicker,completeBrain,skipBrain,openBrainResult,bindWorldMapClicks,openWorldRegion,enterWorldRegion,closeWorldRegion,approveShopRequest,rejectShopRequest,clearReviewedShopRequests,rejectMissionFromSettings,
-  playSound,sparkleBurst,handleTravelPhotos,removeTravelDraftPhoto,clearTravelDraft,updateTravelSaveButton,saveTravelDiary,editTravelDiary,deleteTravelDiary,openTravelPhoto,saveParentMemo,deleteParentMemo,editParentMemo,saveParentMemoSettings,createManualSnapshot,restoreSnapshot,restoreLatestSnapshot,clearBackupSnapshots,saveBackupSettings
+  playSound,sparkleBurst,importBookCatalog,clearBookCatalog,searchLocalBookCatalog,chooseCatalogBook,handleBookCover,handleTravelPhotos,removeTravelDraftPhoto,clearTravelDraft,updateTravelSaveButton,saveTravelDiary,editTravelDiary,deleteTravelDiary,openTravelPhoto,saveParentMemo,deleteParentMemo,editParentMemo,saveParentMemoSettings,createManualSnapshot,restoreSnapshot,restoreLatestSnapshot,clearBackupSnapshots,saveBackupSettings
 });
 
 let observedDay=today();
@@ -1792,7 +1769,7 @@ init();
 <script>
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=2.4.0').catch(err => {
+    navigator.serviceWorker.register('./sw.js?v=2.5.0').catch(err => {
       console.warn('Service worker registration skipped:', err);
     });
   });
